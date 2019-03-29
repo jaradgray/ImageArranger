@@ -1,0 +1,33 @@
+﻿<Window x:Class="ImageArranger.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ImageArranger"
+        mc:Ignorable="d"
+        x:Name="window"
+        Title="Image Arranger" Height="450" Width="800" WindowState="Maximized">
+    <Window.Resources>
+        <ContextMenu x:Key="CanvasContextMenu">
+            <MenuItem Header="Remove All Images" Click="RemoveAllImages_Click" />
+            <MenuItem Header="Add Image..." Click="AddImage_Click" />
+        </ContextMenu>
+
+        <ContextMenu x:Key="ImageContextMenu">
+            <MenuItem Header="Remove Image" Click="RemoveImage_Click" />
+            <MenuItem Header="Remove All Images" Click="RemoveAllImages_Click" />
+            <MenuItem Header="Add Image..." Click="AddImage_Click" />
+        </ContextMenu>
+    </Window.Resources>
+
+    <Canvas x:Name="canvas"
+            ContextMenu="{StaticResource CanvasContextMenu}"
+            Background="Black"
+            AllowDrop="True"
+            PreviewMouseLeftButtonDown="Canvas_PreviewMouseLeftButtonDown"
+            SizeChanged="Canvas_SizeChanged"
+            PreviewDrop="Canvas_PreviewDrop">
+
+    </Canvas>
+        
+</Window>
