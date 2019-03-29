@@ -1,0 +1,15 @@
+D:\dev\C# Projects\ImageArranger\src\ImageArranger\bin\Release\ImageArranger.exe.config
+D:\dev\C# Projects\ImageArranger\src\ImageArranger\bin\Release\ImageArranger.exe
+D:\dev\C# Projects\ImageArranger\src\ImageArranger\bin\Release\ImageArranger.pdb
+D:\dev\C# Projects\ImageArranger\src\ImageArranger\obj\Release\ImageArranger.csprojAssemblyReference.cache
+D:\dev\C# Projects\ImageArranger\src\ImageArranger\obj\Release\MainWindow.g.cs
+D:\dev\C# Projects\ImageArranger\src\ImageArranger\obj\Release\App.g.cs
+D:\dev\C# Projects\ImageArranger\src\ImageArranger\obj\Release\ImageArranger_MarkupCompile.cache
+D:\dev\C# Projects\ImageArranger\src\ImageArranger\obj\Release\ImageArranger_MarkupCompile.lref
+D:\dev\C# Projects\ImageArranger\src\ImageArranger\obj\Release\MainWindow.baml
+D:\dev\C# Projects\ImageArranger\src\ImageArranger\obj\Release\ImageArranger.g.resources
+D:\dev\C# Projects\ImageArranger\src\ImageArranger\obj\Release\ImageArranger.Properties.Resources.resources
+D:\dev\C# Projects\ImageArranger\src\ImageArranger\obj\Release\ImageArranger.csproj.GenerateResource.cache
+D:\dev\C# Projects\ImageArranger\src\ImageArranger\obj\Release\ImageArranger.csproj.CoreCompileInputs.cache
+D:\dev\C# Projects\ImageArranger\src\ImageArranger\obj\Release\ImageArranger.exe
+D:\dev\C# Projects\ImageArranger\src\ImageArranger\obj\Release\ImageArranger.pdb
