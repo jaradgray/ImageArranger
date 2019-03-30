@@ -219,16 +219,11 @@ namespace ImageArranger
         }//end InsertRect()
 
         /// <summary>
-        /// TODO: UPDATE THIS DESCRIPTION
-        /// Resizes Bounds such that its aspect ratio is maintained and either its
-        /// Height is reduced by the bottommost Row's Height or its Width is reduced
-        /// by the rightmost Column's Width - choosing the size having the largest area
-        /// 
-        /// Returns true if Bounds was successfully resized, false otherwise
+        /// Resizes Bounds such that its shortest dimensions is reduced by 1px and its aspect ratio is maintained.
         /// </summary>
+        /// <returns>True if Bounds was successfully resized, false otherwise</returns>
         public bool ShrinkBounds()
         {
-            // shrink Bounds by 1px in its shortest dimension (and shrink proportionally in other dimension)
             double newW, newH;
             // reduce the limiting dimension by 1
             if (Bounds.Width / Bounds.Height >= 1)
@@ -243,6 +238,7 @@ namespace ImageArranger
                 newW = Bounds.Width - 1.0;
                 newH = Bounds.Height * newW / Bounds.Width;
             }
+            if (newW < 0 || newH < 0) return false;
             Bounds = new Rect(0.0, 0.0, newW, newH);
             return true;
         }//end ShrinkBounds()
@@ -329,6 +325,10 @@ namespace ImageArranger
             return result;
         }//end GetRects()
 
+        /// <summary>
+        /// Returns a new DynamicGrid whose state is the same as this one's
+        /// </summary>
+        /// <returns></returns>
         public DynamicGrid GetCopy()
         {
             DynamicGrid result = new DynamicGrid(Bounds);

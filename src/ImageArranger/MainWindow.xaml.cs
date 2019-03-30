@@ -154,6 +154,11 @@ namespace ImageArranger
 
         // Methods
 
+        /// <summary>
+        /// Shows an OpenFileDialog for user to select image files and adds to the filenames List any
+        /// filename it doesn't already contain.
+        /// </summary>
+        /// <returns>True if one or more files were added to filenames List, false otherwise.</returns>
         private bool SelectImages()
         {
             bool fileAdded = false;
@@ -177,9 +182,9 @@ namespace ImageArranger
         }
 
         /// <summary>
-        /// Given a Rect and values for max width and height, return a new Rect with
-        /// the same proportions as orig and whose width and height are not greater
-        /// than the given max values.
+        /// Given a Rect and values for max width and height, returns a new Rect with
+        /// the same proportions as orig and is as large as possible without its width 
+        /// or height exceeding the given max values.
         /// </summary>
         /// <param name="orig"></param>
         /// <param name="maxWidth"></param>
@@ -237,6 +242,20 @@ namespace ImageArranger
             images.Sort((x, y) => (y.Width * y.Height).CompareTo(x.Width * x.Height));
         }
 
+        /// <summary>
+        /// Finds the optimal arrangement of items in rects List within a bounding rectangle whose
+        /// aspect ratio is the same as that of the application window.
+        /// 
+        /// Starts with a bounding rectangle whose height is the sum of the heights of the items in rects,
+        /// places them with a topmost-row-of-leftmost-column algorithm, and repeatedly shrinks the size
+        /// of the bounding rectangle and re-places the Rects until an attempt to place the Rects fails.
+        /// 
+        /// The placement algorithm is a modified version of the one outlined here:
+        /// https://www.codeproject.com/Articles/210979/Fast-optimizing-rectangle-packing-algorithm-for-bu
+        /// 
+        /// Post: grid's state represents the optimal arrangements of the items in rects and
+        /// images within the bounds of the application window.
+        /// </summary>
         private void ArrangeRects()
         {
             double heightSum = 0.0;
@@ -272,6 +291,10 @@ namespace ImageArranger
             grid = optimalArrangement.GetCopy();
         }//end ArrangeRects()
 
+        /// <summary>
+        /// Places as many items from rects List into grid as will fit
+        /// </summary>
+        /// <returns></returns>
         private bool PlaceRects()
         {
             // the purpose of the following code is to find a col and row to call
@@ -306,6 +329,17 @@ namespace ImageArranger
             return true; // all Rects successfully placed within bounds
         }//end PlaceRects()
 
+        /// <summary>
+        /// Given a Rect and column and row indexes, checks if grid can accommodate rect at the given
+        /// column and row, and inserts the rect into grid if so.
+        /// 
+        /// Post: grid's state represents that of rect having been inserted at [col, row] if successful,
+        /// grid's state is unchanged if unsuccessful.
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="col"></param>
+        /// <param name="row"></param>
+        /// <returns>True if rect was successfully placed in grid at [col, row], false otherwise</returns>
         private bool PlaceRect(Rect rect, int col, int row)
         {
             if (grid == null)
@@ -314,7 +348,7 @@ namespace ImageArranger
                 return false;
             }
 
-            // CHECK IF RECT CAN BE PLACED ANYWHERE IN GRID
+            // CHECK IF RECT CAN BE PLACED IN GRID AT CELL [col, row]
             double availableHeight = grid.GetRowHeight(row);
             double availableWidth = grid.GetColWidth(col);
             int nextRowIndex = row + 1;
@@ -340,6 +374,10 @@ namespace ImageArranger
             return true;
         }
 
+        /// <summary>
+        /// Scales grid to fit application window, updates sizes of items in rects based on state of grid,
+        /// creates Rectangles based on items in rects List and adds them to canvas.Children.
+        /// </summary>
         private void DrawRects()
         {
             grid.ScaleTo(new Size(((Canvas)this.Content).ActualWidth, ((Canvas)this.Content).ActualHeight));
@@ -380,6 +418,10 @@ namespace ImageArranger
             }
         }
 
+        /// <summary>
+        /// Scales grid to fit application window, updates sizes of items in rects and images based on
+        /// state of grid, adds items in images List to canvas.Children.
+        /// </summary>
         private void DrawImages()
         {
             grid.ScaleTo(new Size(((Canvas)this.Content).ActualWidth, ((Canvas)this.Content).ActualHeight));
