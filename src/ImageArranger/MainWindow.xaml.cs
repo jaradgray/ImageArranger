@@ -51,20 +51,14 @@ namespace ImageArranger
 
         private void Canvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Console.WriteLine("Grid_PreviewMouseLeftButtonDown() called.");
-
             if (SelectImages())
             {
                 GenerateNormalizedLists();
-
-                // pack them
                 ArrangeRects();
-
-                // draw Rects/Images
                 canvas.Children.Clear();
                 //DrawRects();
                 DrawImages();
-            }//end if
+            }
         }//end Canvas_PreviewMouseLeftButtonDown()
 
         private void Canvas_PreviewDrop(object sender, DragEventArgs e)
@@ -107,7 +101,6 @@ namespace ImageArranger
 
         private void resizeTimer_Tick(object sender, EventArgs e)
         {
-            Console.WriteLine("resizeTimer_Tick(): started.");
             resizeTimer.IsEnabled = false;
             if (filenames.Count <= 0) return;
             // rearrange rects/images based on new canvas size (bounds)
@@ -151,9 +144,7 @@ namespace ImageArranger
             if (SelectImages())
             {
                 GenerateNormalizedLists();
-                // pack them
                 ArrangeRects();
-                // draw Rects/Images
                 canvas.Children.Clear();
                 //DrawRects();
                 DrawImages();
@@ -196,8 +187,6 @@ namespace ImageArranger
         /// <returns></returns>
         private Rect GetOptimalRect(Rect orig, double maxWidth, double maxHeight)
         {
-            Console.WriteLine("GetOptimalRect(): started.");
-
             double aspect = maxWidth / maxHeight;
 
             Rect result = new Rect(0d, 0d, 0d, 0d);
@@ -224,7 +213,7 @@ namespace ImageArranger
             double w = ((Canvas)this.Content).ActualWidth;
             double h = ((Canvas)this.Content).ActualHeight;
 
-            Console.WriteLine($"Canvas size: {((Canvas)this.Content).ActualWidth}, {((Canvas)this.Content).ActualHeight}");
+            //Console.WriteLine($"Canvas size: {((Canvas)this.Content).ActualWidth}, {((Canvas)this.Content).ActualHeight}");
 
             rects.Clear();
             images.Clear();
@@ -321,7 +310,7 @@ namespace ImageArranger
         {
             if (grid == null)
             {
-                Console.WriteLine("PlaceRect(): grid is null");
+                Console.WriteLine("PlaceRect(): Error - grid is null");
                 return false;
             }
 
@@ -353,12 +342,10 @@ namespace ImageArranger
 
         private void DrawRects()
         {
-            Console.WriteLine("DrawRects(): started.");
-
             grid.ScaleTo(new Size(((Canvas)this.Content).ActualWidth, ((Canvas)this.Content).ActualHeight));
             rects = grid.GetRects(rects.Count);
 
-            // DRAW GRID'S BOUNDS FOR DEBUGGING
+            // DRAW GRID'S BOUNDS
             Rectangle boundsRect = new Rectangle();
             boundsRect.Width = grid.Bounds.Width;
             boundsRect.Height = grid.Bounds.Height;
@@ -371,11 +358,8 @@ namespace ImageArranger
             Canvas.SetLeft(boundsRect, grid.Bounds.X);
             Canvas.SetTop(boundsRect, grid.Bounds.Y);
             canvas.Children.Add(boundsRect);
-            // END DEBUGGING
 
-            //Console.WriteLine(grid.ToString());
-            // rects are now based on grid
-
+            // DRAW EACH RECT
             foreach (Rect rect in rects)
             {
                 Rectangle r = new Rectangle();
@@ -398,10 +382,6 @@ namespace ImageArranger
 
         private void DrawImages()
         {
-            // (heavily copied from DrawRects()
-
-            Console.WriteLine("DrawImages(): started.");
-
             grid.ScaleTo(new Size(((Canvas)this.Content).ActualWidth, ((Canvas)this.Content).ActualHeight));
             rects = grid.GetRects(rects.Count);
 

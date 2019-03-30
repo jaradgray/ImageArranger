@@ -10,13 +10,13 @@ namespace ImageArranger
     struct Column
     {
         public double Width { get; set; }
-        public Column(double width) { Width = width; }// Math.Floor(width); }
+        public Column(double width) { Width = width; }
     }
 
     struct Row
     {
         public double Height { get; set; }
-        public Row(double height) { Height = height; }// Math.Floor(height); }
+        public Row(double height) { Height = height; }
     }
 
     struct Cell
@@ -113,13 +113,12 @@ namespace ImageArranger
         /// <param name="row"></param>
         public void InsertRect(Rect rect, int col, int row)
         {
-            //double rectWidth = Math.Floor(rect.Width);
-            //double rectHeight = Math.Floor(rect.Height);
-            double accommodateWidth = 0.0;
+            // DETERMINE HOW MANY COLUMNS AND ROWS THE RECT TO BE PLACED WILL OCCUPY
+            double accommodatedWidth = 0.0;
             int colSpan = 0;
-            while (accommodateWidth < rect.Width)
+            while (accommodatedWidth < rect.Width)
             {
-                accommodateWidth += cols[col + colSpan].Width;
+                accommodatedWidth += cols[col + colSpan].Width;
                 colSpan++;
             }
             double accommodatedHeight = 0.0;
@@ -130,13 +129,14 @@ namespace ImageArranger
                 rowSpan++;
             }
 
+            // INSERT APPROPRIATE COLUMNS, ROWS, AND CELLS
             bool colAdded = false;
             bool rowAdded = false;
-            if (Math.Abs(accommodateWidth - rect.Width) > 1.0 && Math.Abs(accommodatedHeight - rect.Height) > 1.0)
+            if (Math.Abs(accommodatedWidth - rect.Width) > 1.0 && Math.Abs(accommodatedHeight - rect.Height) > 1.0)
             {
                 // INSERT A NEW COLUMN AND A NEW ROW
                 // cols and rows
-                Column newCol = new Column(accommodateWidth - rect.Width);
+                Column newCol = new Column(accommodatedWidth - rect.Width);
                 cols[col + colSpan - 1] = new Column(cols[col + colSpan - 1].Width - newCol.Width);
                 cols.Insert(col + colSpan, newCol);
                 NumCols++;
@@ -158,7 +158,7 @@ namespace ImageArranger
                 colAdded = true;
                 rowAdded = true;
             }
-            else if (Math.Abs(accommodateWidth - rect.Width) > 1.0)
+            else if (Math.Abs(accommodatedWidth - rect.Width) > 1.0)
             {
                 // INSERT A NEW COLUMN
                 // cells
@@ -169,7 +169,7 @@ namespace ImageArranger
                 }
                 cells.Insert(col + colSpan, newCells);
                 // cols
-                Column newCol = new Column(accommodateWidth - rect.Width);
+                Column newCol = new Column(accommodatedWidth - rect.Width);
                 cols[col + colSpan - 1] = new Column(cols[col + colSpan - 1].Width - newCol.Width);
                 cols.Insert(col + colSpan, newCol);
                 NumCols++;
@@ -290,6 +290,7 @@ namespace ImageArranger
                         index = cell.Index;
                         visitedIndexes.Add(index);
                         // create the Rect who occupies this Cell and add it to result
+                        // Note: a Rect can occupy more than one Cell
                         double x, y, w, h;
                         x = y = w = h = 0.0;
                         // the Rect's position
