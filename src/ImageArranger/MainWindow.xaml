@@ -20,14 +20,22 @@
         </ContextMenu>
     </Window.Resources>
 
-    <Canvas x:Name="canvas"
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New"/>
+                <MenuItem Header="_Quit"/>
+            </MenuItem>
+        </Menu>
+
+        <Canvas x:Name="MainCanvas"
             ContextMenu="{StaticResource CanvasContextMenu}"
             Background="Black"
             AllowDrop="True"
-            PreviewMouseLeftButtonDown="Canvas_PreviewMouseLeftButtonDown"
-            SizeChanged="Canvas_SizeChanged"
-            PreviewDrop="Canvas_PreviewDrop">
+            PreviewMouseLeftButtonDown="MainCanvas_PreviewMouseLeftButtonDown"
+            SizeChanged="MainCanvas_SizeChanged"
+            PreviewDrop="MainCanvas_PreviewDrop">
 
-    </Canvas>
-        
+        </Canvas>
+    </DockPanel>
 </Window>
