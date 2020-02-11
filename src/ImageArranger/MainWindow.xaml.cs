@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace ImageArranger
 {
@@ -51,7 +52,9 @@ namespace ImageArranger
 
         private void OnMenuNew(object sender, RoutedEventArgs e)
         {
-
+            // Launch a new ImageArranger process
+            string processName = Process.GetCurrentProcess().ProcessName;
+            Process.Start(processName);
         }
 
         private void OnMenuQuit(object sender, RoutedEventArgs e)
