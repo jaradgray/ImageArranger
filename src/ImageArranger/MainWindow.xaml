@@ -23,8 +23,8 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_New"/>
-                <MenuItem Header="_Quit"/>
+                <MenuItem Header="_New" Click="OnMenuNew"/>
+                <MenuItem Header="_Quit" Click="OnMenuQuit"/>
             </MenuItem>
         </Menu>
 

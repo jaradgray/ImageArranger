@@ -49,6 +49,16 @@ namespace ImageArranger
 
         // Event Handlers
 
+        private void OnMenuNew(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OnMenuQuit(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
         private void MainCanvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (SelectImages())
