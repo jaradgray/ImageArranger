@@ -20,11 +20,23 @@
         </ContextMenu>
     </Window.Resources>
 
+    <Window.CommandBindings>
+        <CommandBinding
+            Command="{x:Static local:Commands.NewCommand}"
+            CanExecute="NewCommand_CanExecute"
+            Executed="NewCommand_Executed"/>
+        <CommandBinding
+            Command="{x:Static local:Commands.QuitCommand}"
+            CanExecute="QuitCommand_CanExecute"
+            Executed="QuitCommand_Executed"/>
+    </Window.CommandBindings>
+    
+
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_New" Click="OnMenuNew"/>
-                <MenuItem Header="_Quit" Click="OnMenuQuit"/>
+                <MenuItem Header="_New" Command="{x:Static local:Commands.NewCommand}"/>
+                <MenuItem Header="_Quit" Command="{x:Static local:Commands.QuitCommand}"/>
             </MenuItem>
         </Menu>
 

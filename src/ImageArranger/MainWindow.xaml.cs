@@ -50,17 +50,29 @@ namespace ImageArranger
 
         // Event Handlers
 
-        private void OnMenuNew(object sender, RoutedEventArgs e)
+        private void NewCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void NewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             // Launch a new ImageArranger process
             string processName = Process.GetCurrentProcess().ProcessName;
             Process.Start(processName);
         }
 
-        private void OnMenuQuit(object sender, RoutedEventArgs e)
+        private void QuitCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void QuitCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Close();
         }
+
+
 
         private void MainCanvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
