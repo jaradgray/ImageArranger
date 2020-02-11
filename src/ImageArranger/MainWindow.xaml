@@ -38,6 +38,10 @@
                 <MenuItem Header="_New" Command="{x:Static local:Commands.NewCommand}"/>
                 <MenuItem Header="_Quit" Command="{x:Static local:Commands.QuitCommand}"/>
             </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Add Image..." Click="AddImage_Click"/>
+                <MenuItem Header="_Remove All Images" Click="RemoveAllImages_Click"/>
+            </MenuItem>
         </Menu>
 
         <Canvas x:Name="MainCanvas"
