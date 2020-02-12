@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ImageArranger"
         mc:Ignorable="d"
         x:Name="window"
-        Title="Image Arranger" Height="450" Width="800" WindowState="Maximized">
+        Title="Image Arranger" Height="450" Width="800" WindowState="Maximized" Loaded="Window_Loaded">
     <Window.Resources>
         <ContextMenu x:Key="CanvasContextMenu">
             <MenuItem Header="Remove All Images" Click="RemoveAllImages_Click" />
