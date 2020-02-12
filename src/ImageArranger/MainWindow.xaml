@@ -37,7 +37,8 @@
 
 
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
+        <Menu x:Name="MainMenu"
+              DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_New" Command="{x:Static local:Commands.NewCommand}"/>
                 <MenuItem Header="_Quit" Command="{x:Static local:Commands.QuitCommand}"/>
