@@ -175,14 +175,27 @@ namespace ImageArranger
 
         private void MainCanvas_PreviewDrop(object sender, DragEventArgs e)
         {
-            string[] validExtensions = { ".BMP", ".GIF", ".JPEG", ".JPG", ".PNG" };
+            string[] validImageExtensions = { ".BMP", ".GIF", ".JPEG", ".JPG", ".PNG" };
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 bool fileAdded = false;
                 string[] droppedFilenames = (string[])e.Data.GetData(DataFormats.FileDrop);
+                // Check if dropped File is a single Arrangement file
+                if (droppedFilenames.Length == 1)
+                {
+                    string fileName = droppedFilenames[0];
+                    string extension = System.IO.Path.GetExtension(fileName).ToUpperInvariant();
+                    if (extension.Equals(FILE_EXTENSION_ARRANGEMENT.ToUpperInvariant()))
+                    {
+                        // Open the Arrangement
+                        OpenArrangement(fileName);
+                        return;
+                    }
+                }
+                // Handle more than one file dropped
                 foreach (string s in droppedFilenames)
                 {
-                    if (validExtensions.Contains(System.IO.Path.GetExtension(s).ToUpperInvariant()))
+                    if (validImageExtensions.Contains(System.IO.Path.GetExtension(s).ToUpperInvariant()))
                     {
                         // add s to filenames if it's not already there
                         if (!filenames.Contains(s))
