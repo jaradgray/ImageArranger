@@ -53,7 +53,7 @@
               DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_New" Command="{x:Static local:Commands.NewCommand}"/>
-                <MenuItem Header="_Open" Command="{x:Static local:Commands.OpenCommand}"/>
+                <MenuItem Header="_Open Arrangement..." Command="{x:Static local:Commands.OpenCommand}"/>
                 <Separator />
                 <MenuItem Header="_Save Arrangement" Command="{x:Static local:Commands.SaveCommand}" />
                 <MenuItem Header="Save _Arrangement As..." Command="{x:Static local:Commands.SaveAsCommand}" />
