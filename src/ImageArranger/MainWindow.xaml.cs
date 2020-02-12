@@ -28,6 +28,7 @@ namespace ImageArranger
         private const string APP_NAME = "Image Arranger";
         private const string UNTITLED_ARRANGEMENT_NAME = "Untitled Arrangement";
         private const string FILE_EXTENSION_ARRANGEMENT = ".iaa";
+        private const string UNSAVED_CHANGES_INDICATOR = " *";
 
 
         // Instance Variables
@@ -37,6 +38,7 @@ namespace ImageArranger
         private DynamicGrid grid;
         private DispatcherTimer resizeTimer; // resize timer idea from https://stackoverflow.com/questions/4474670/how-to-catch-the-ending-resize-window
         private string _arrangementPath = "";
+        private bool _hasUnsavedChanges = false;
 
 
         // Constructor
@@ -144,6 +146,7 @@ namespace ImageArranger
         {
             if (SelectImages())
             {
+                IndicateUnsavedChanges(true);
                 GenerateNormalizedLists();
                 ArrangeRects();
                 MainCanvas.Children.Clear();
@@ -173,6 +176,7 @@ namespace ImageArranger
                 }//end foreach
                 if (fileAdded)
                 {
+                    IndicateUnsavedChanges(true);
                     GenerateNormalizedLists();
                     ArrangeRects();
                     MainCanvas.Children.Clear();
@@ -214,6 +218,7 @@ namespace ImageArranger
 
             // remove the Image's filename from filenames and redo arrangement
             filenames.Remove(((BitmapImage)target.Source).UriSource.OriginalString);
+            IndicateUnsavedChanges(true);
             GenerateNormalizedLists();
             MainCanvas.Children.Clear();
             if (filenames.Count == 0) return;
@@ -224,6 +229,11 @@ namespace ImageArranger
 
         private void RemoveAllImages_Click(object sender, RoutedEventArgs e)
         {
+            if (filenames.Count <= 0)
+            {
+                return;
+            }
+            IndicateUnsavedChanges(true);
             filenames.Clear();
             images.Clear();
             rects.Clear();
@@ -234,6 +244,7 @@ namespace ImageArranger
         {
             if (SelectImages())
             {
+                IndicateUnsavedChanges(true);
                 GenerateNormalizedLists();
                 ArrangeRects();
                 MainCanvas.Children.Clear();
@@ -256,7 +267,8 @@ namespace ImageArranger
 
             // Save all filepaths to file at _arrangementPath
             File.WriteAllLines(_arrangementPath, filenames);
-            // TODO clear unsaved changes
+            // Clear unsaved changes
+            IndicateUnsavedChanges(false);
         }
 
         private void SaveAsArrangement()
@@ -271,8 +283,21 @@ namespace ImageArranger
                 // Update _arrangementName and window Title
                 _arrangementPath = sfd.FileName;
                 this.Title = System.IO.Path.GetFileName(_arrangementPath) + " - " + APP_NAME;
-                // TODO clear unsaved changes
+                // Clear unsaved changes
+                IndicateUnsavedChanges(false);
             }
+        }
+
+        private void IndicateUnsavedChanges(bool value)
+        {
+            if (value && !this.Title.EndsWith(UNSAVED_CHANGES_INDICATOR))
+            {
+                this.Title += UNSAVED_CHANGES_INDICATOR;
+            } else if (!value && this.Title.EndsWith(UNSAVED_CHANGES_INDICATOR))
+            {
+                this.Title = this.Title.Remove(this.Title.Length - UNSAVED_CHANGES_INDICATOR.Length);
+            }
+            _hasUnsavedChanges = value;
         }
 
         /// <summary>
