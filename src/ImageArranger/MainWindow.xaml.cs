@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.IO;
 
 namespace ImageArranger
 {
@@ -23,12 +24,21 @@ namespace ImageArranger
     /// </summary>
     public partial class MainWindow : Window
     {
+        // Constants
+        private const string APP_NAME = "Image Arranger";
+        private const string UNTITLED_ARRANGEMENT_NAME = "Untitled Arrangement";
+        private const string FILE_EXTENSION_ARRANGEMENT = ".iaa";
+        private const string UNSAVED_CHANGES_INDICATOR = " *";
+
+
         // Instance Variables
         private List<string> filenames;
         private List<Image> images;
         private List<Rect> rects;
         private DynamicGrid grid;
         private DispatcherTimer resizeTimer; // resize timer idea from https://stackoverflow.com/questions/4474670/how-to-catch-the-ending-resize-window
+        private string _arrangementPath = "";
+        private bool _hasUnsavedChanges = false;
 
 
         // Constructor
@@ -60,6 +70,26 @@ namespace ImageArranger
             // Launch a new ImageArranger process
             string processName = Process.GetCurrentProcess().ProcessName;
             Process.Start(processName);
+        }
+
+        private void SaveCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void SaveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            SaveArrangement();
+        }
+
+        private void SaveAsCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void SaveAsCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            SaveAsArrangement();
         }
 
         private void QuitCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -98,11 +128,25 @@ namespace ImageArranger
         }
 
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Check if app was launched by opening a file
+            if (Application.Current.Properties["arg0"] != null)
+            {
+                // TODO initialize from Arrangement file
+                //this.Title = _arrangementName + " - " + APP_NAME;
+            } else
+            {
+                // TODO initialize untitled Arrangement
+                this.Title = UNTITLED_ARRANGEMENT_NAME + " - " + APP_NAME; ;
+            }
+        }
 
         private void MainCanvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (SelectImages())
             {
+                IndicateUnsavedChanges(true);
                 GenerateNormalizedLists();
                 ArrangeRects();
                 MainCanvas.Children.Clear();
@@ -132,6 +176,7 @@ namespace ImageArranger
                 }//end foreach
                 if (fileAdded)
                 {
+                    IndicateUnsavedChanges(true);
                     GenerateNormalizedLists();
                     ArrangeRects();
                     MainCanvas.Children.Clear();
@@ -173,6 +218,7 @@ namespace ImageArranger
 
             // remove the Image's filename from filenames and redo arrangement
             filenames.Remove(((BitmapImage)target.Source).UriSource.OriginalString);
+            IndicateUnsavedChanges(true);
             GenerateNormalizedLists();
             MainCanvas.Children.Clear();
             if (filenames.Count == 0) return;
@@ -183,6 +229,11 @@ namespace ImageArranger
 
         private void RemoveAllImages_Click(object sender, RoutedEventArgs e)
         {
+            if (filenames.Count <= 0)
+            {
+                return;
+            }
+            IndicateUnsavedChanges(true);
             filenames.Clear();
             images.Clear();
             rects.Clear();
@@ -193,6 +244,7 @@ namespace ImageArranger
         {
             if (SelectImages())
             {
+                IndicateUnsavedChanges(true);
                 GenerateNormalizedLists();
                 ArrangeRects();
                 MainCanvas.Children.Clear();
@@ -203,6 +255,50 @@ namespace ImageArranger
 
 
         // Methods
+
+        private void SaveArrangement()
+        {
+            // Check if we need to "Save As" instead
+            if (_arrangementPath.Equals(""))
+            {
+                SaveAsArrangement();
+                return;
+            }
+
+            // Save all filepaths to file at _arrangementPath
+            File.WriteAllLines(_arrangementPath, filenames);
+            // Clear unsaved changes
+            IndicateUnsavedChanges(false);
+        }
+
+        private void SaveAsArrangement()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Image Arranger Arrangement (*.iaa)|*.iaa";
+            sfd.FileName = (_arrangementPath.Equals("")) ? UNTITLED_ARRANGEMENT_NAME : System.IO.Path.GetFileName(_arrangementPath);
+            if (sfd.ShowDialog().Equals(true))
+            {
+                // Write all filenames to sfd.FileName
+                File.WriteAllLines(sfd.FileName, filenames);
+                // Update _arrangementName and window Title
+                _arrangementPath = sfd.FileName;
+                this.Title = System.IO.Path.GetFileName(_arrangementPath) + " - " + APP_NAME;
+                // Clear unsaved changes
+                IndicateUnsavedChanges(false);
+            }
+        }
+
+        private void IndicateUnsavedChanges(bool value)
+        {
+            if (value && !this.Title.EndsWith(UNSAVED_CHANGES_INDICATOR))
+            {
+                this.Title += UNSAVED_CHANGES_INDICATOR;
+            } else if (!value && this.Title.EndsWith(UNSAVED_CHANGES_INDICATOR))
+            {
+                this.Title = this.Title.Remove(this.Title.Length - UNSAVED_CHANGES_INDICATOR.Length);
+            }
+            _hasUnsavedChanges = value;
+        }
 
         /// <summary>
         /// Shows an OpenFileDialog for user to select image files and adds to the filenames List any

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ImageArranger"
         mc:Ignorable="d"
         x:Name="window"
-        Title="Image Arranger" Height="450" Width="800" WindowState="Maximized">
+        Title="Image Arranger" Height="450" Width="800" WindowState="Maximized" Loaded="Window_Loaded">
     <Window.Resources>
         <ContextMenu x:Key="CanvasContextMenu">
             <MenuItem Header="Remove All Images" Click="RemoveAllImages_Click" />
@@ -26,6 +26,14 @@
             CanExecute="NewCommand_CanExecute"
             Executed="NewCommand_Executed"/>
         <CommandBinding
+            Command="{x:Static local:Commands.SaveCommand}"
+            CanExecute="SaveCommand_CanExecute"
+            Executed="SaveCommand_Executed"/>
+        <CommandBinding
+            Command="{x:Static local:Commands.SaveAsCommand}"
+            CanExecute="SaveAsCommand_CanExecute"
+            Executed="SaveAsCommand_Executed"/>
+        <CommandBinding
             Command="{x:Static local:Commands.QuitCommand}"
             CanExecute="QuitCommand_CanExecute"
             Executed="QuitCommand_Executed"/>
@@ -41,6 +49,10 @@
               DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_New" Command="{x:Static local:Commands.NewCommand}"/>
+                <Separator />
+                <MenuItem Header="_Save Arrangement" Command="{x:Static local:Commands.SaveCommand}" />
+                <MenuItem Header="Save _Arrangement As..." Command="{x:Static local:Commands.SaveAsCommand}" />
+                <Separator />
                 <MenuItem Header="_Quit" Command="{x:Static local:Commands.QuitCommand}"/>
             </MenuItem>
             <MenuItem Header="_Edit">
