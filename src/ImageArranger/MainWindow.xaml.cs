@@ -72,6 +72,16 @@ namespace ImageArranger
             Close();
         }
 
+        private void FullScreenCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void FullScreenCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            // TODO go full-screen
+        }
+
 
 
         private void MainCanvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

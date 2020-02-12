@@ -11,11 +11,13 @@ namespace ImageArranger
     {
         public static RoutedCommand NewCommand = new RoutedCommand();
         public static RoutedCommand QuitCommand = new RoutedCommand();
+        public static RoutedCommand FullScreenCommand = new RoutedCommand();
 
         static Commands()
         {
             NewCommand.InputGestures.Add(new KeyGesture(Key.N, ModifierKeys.Control, "Ctrl+N"));
             QuitCommand.InputGestures.Add(new KeyGesture(Key.Q, ModifierKeys.Control, "Ctrl+Q"));
+            FullScreenCommand.InputGestures.Add(new KeyGesture(Key.F, ModifierKeys.Control, "Ctrl+F"));
         }
     }
 }

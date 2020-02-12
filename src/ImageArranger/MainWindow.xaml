@@ -29,8 +29,12 @@
             Command="{x:Static local:Commands.QuitCommand}"
             CanExecute="QuitCommand_CanExecute"
             Executed="QuitCommand_Executed"/>
+        <CommandBinding
+            Command="{x:Static local:Commands.FullScreenCommand}"
+            CanExecute="FullScreenCommand_CanExecute"
+            Executed="FullScreenCommand_Executed"/>
     </Window.CommandBindings>
-    
+
 
     <DockPanel>
         <Menu DockPanel.Dock="Top">
@@ -41,6 +45,9 @@
             <MenuItem Header="_Edit">
                 <MenuItem Header="_Add Image..." Click="AddImage_Click"/>
                 <MenuItem Header="_Remove All Images" Click="RemoveAllImages_Click"/>
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="_Full Screen" Command="{x:Static local:Commands.FullScreenCommand}"/>
             </MenuItem>
         </Menu>
 
