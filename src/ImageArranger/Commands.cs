@@ -10,6 +10,7 @@ namespace ImageArranger
     public static class Commands
     {
         public static RoutedCommand NewCommand = new RoutedCommand();
+        public static RoutedCommand OpenCommand = new RoutedCommand();
         public static RoutedCommand SaveCommand = new RoutedCommand();
         public static RoutedCommand SaveAsCommand = new RoutedCommand();
         public static RoutedCommand QuitCommand = new RoutedCommand();
@@ -18,6 +19,7 @@ namespace ImageArranger
         static Commands()
         {
             NewCommand.InputGestures.Add(new KeyGesture(Key.N, ModifierKeys.Control, "Ctrl+N"));
+            OpenCommand.InputGestures.Add(new KeyGesture(Key.O, ModifierKeys.Control, "Ctrl+O"));
             SaveCommand.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Control, "Ctrl+S"));
             SaveAsCommand.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Control|ModifierKeys.Shift, "Ctrl+Shift+S"));
             QuitCommand.InputGestures.Add(new KeyGesture(Key.Q, ModifierKeys.Control, "Ctrl+Q"));
