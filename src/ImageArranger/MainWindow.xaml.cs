@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.IO;
 
 namespace ImageArranger
 {
@@ -35,7 +36,7 @@ namespace ImageArranger
         private List<Rect> rects;
         private DynamicGrid grid;
         private DispatcherTimer resizeTimer; // resize timer idea from https://stackoverflow.com/questions/4474670/how-to-catch-the-ending-resize-window
-        private string _arrangementName;
+        private string _arrangementName = "";
 
 
         // Constructor
@@ -76,7 +77,7 @@ namespace ImageArranger
 
         private void SaveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            // TODO Save
+            SaveArrangement();
         }
 
         private void SaveAsCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -86,7 +87,7 @@ namespace ImageArranger
 
         private void SaveAsCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            // TODO Save As
+            SaveAsArrangement();
         }
 
         private void QuitCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -131,13 +132,12 @@ namespace ImageArranger
             if (Application.Current.Properties["arg0"] != null)
             {
                 // TODO initialize from Arrangement file
+                //this.Title = _arrangementName + " - " + APP_NAME;
             } else
             {
                 // TODO initialize untitled Arrangement
-                _arrangementName = UNTITLED_ARRANGEMENT_NAME;
+                this.Title = UNTITLED_ARRANGEMENT_NAME + " - " + APP_NAME; ;
             }
-
-            this.Title = _arrangementName + " - " + APP_NAME;
         }
 
         private void MainCanvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -244,6 +244,37 @@ namespace ImageArranger
 
 
         // Methods
+
+        private void SaveArrangement()
+        {
+            // Check if we need to "Save As" instead
+            if (_arrangementName.Equals(""))
+            {
+                SaveAsArrangement();
+                return;
+            }
+
+            // Save all filepaths to file at _arrangementName.iaa
+            string filePath = _arrangementName + FILE_EXTENSION_ARRANGEMENT;
+            File.WriteAllLines(filePath, filenames);
+            // TODO clear unsaved changes
+        }
+
+        private void SaveAsArrangement()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Image Arranger Arrangement (*.iaa)|*.iaa";
+            sfd.FileName = (_arrangementName.Equals("")) ? UNTITLED_ARRANGEMENT_NAME : _arrangementName;
+            if (sfd.ShowDialog().Equals(true))
+            {
+                // Write all filenames to sfd.FileName
+                File.WriteAllLines(sfd.FileName, filenames);
+                // Update _arrangementName and window Title
+                _arrangementName = System.IO.Path.GetFileName(sfd.FileName);
+                this.Title = _arrangementName + " - " + APP_NAME;
+                // TODO clear unsaved changes
+            }
+        }
 
         /// <summary>
         /// Shows an OpenFileDialog for user to select image files and adds to the filenames List any
