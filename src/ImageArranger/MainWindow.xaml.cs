@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace ImageArranger
 {
@@ -49,19 +50,53 @@ namespace ImageArranger
 
         // Event Handlers
 
-        private void Canvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void NewCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void NewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            // Launch a new ImageArranger process
+            string processName = Process.GetCurrentProcess().ProcessName;
+            Process.Start(processName);
+        }
+
+        private void QuitCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void QuitCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void FullScreenCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void FullScreenCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            // TODO go full-screen
+        }
+
+
+
+        private void MainCanvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (SelectImages())
             {
                 GenerateNormalizedLists();
                 ArrangeRects();
-                canvas.Children.Clear();
+                MainCanvas.Children.Clear();
                 //DrawRects();
                 DrawImages();
             }
-        }//end Canvas_PreviewMouseLeftButtonDown()
+        }//end MainCanvas_PreviewMouseLeftButtonDown()
 
-        private void Canvas_PreviewDrop(object sender, DragEventArgs e)
+        private void MainCanvas_PreviewDrop(object sender, DragEventArgs e)
         {
             string[] validExtensions = { ".BMP", ".GIF", ".JPEG", ".JPG", ".PNG" };
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -84,14 +119,14 @@ namespace ImageArranger
                 {
                     GenerateNormalizedLists();
                     ArrangeRects();
-                    canvas.Children.Clear();
+                    MainCanvas.Children.Clear();
                     //DrawRects();
                     DrawImages();
                 }
             }//end if
-        }//end Canvas_PreviewDrop()
+        }//end MainCanvas_PreviewDrop()
 
-        private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void MainCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             // start the resizeTimer
             resizeTimer.IsEnabled = true;
@@ -107,7 +142,7 @@ namespace ImageArranger
             GenerateNormalizedLists();
             ArrangeRects();
             // redraw images/rects
-            canvas.Children.Clear();
+            MainCanvas.Children.Clear();
             //DrawRects();
             DrawImages();
         }
@@ -124,7 +159,7 @@ namespace ImageArranger
             // remove the Image's filename from filenames and redo arrangement
             filenames.Remove(((BitmapImage)target.Source).UriSource.OriginalString);
             GenerateNormalizedLists();
-            canvas.Children.Clear();
+            MainCanvas.Children.Clear();
             if (filenames.Count == 0) return;
             ArrangeRects();
             //DrawRects();
@@ -136,7 +171,7 @@ namespace ImageArranger
             filenames.Clear();
             images.Clear();
             rects.Clear();
-            canvas.Children.Clear();
+            MainCanvas.Children.Clear();
         }
 
         private void AddImage_Click(object sender, RoutedEventArgs e)
@@ -145,7 +180,7 @@ namespace ImageArranger
             {
                 GenerateNormalizedLists();
                 ArrangeRects();
-                canvas.Children.Clear();
+                MainCanvas.Children.Clear();
                 //DrawRects();
                 DrawImages();
             }
@@ -215,10 +250,10 @@ namespace ImageArranger
         /// </summary>
         private void GenerateNormalizedLists()
         {
-            double w = ((Canvas)this.Content).ActualWidth;
-            double h = ((Canvas)this.Content).ActualHeight;
+            double w = MainCanvas.ActualWidth;
+            double h = MainCanvas.ActualHeight;
 
-            //Console.WriteLine($"Canvas size: {((Canvas)this.Content).ActualWidth}, {((Canvas)this.Content).ActualHeight}");
+            //Console.WriteLine($"Canvas size: {MainCanvas.ActualWidth}, {MainCanvas.ActualHeight}");
 
             rects.Clear();
             images.Clear();
@@ -264,11 +299,11 @@ namespace ImageArranger
                 heightSum += r.Height;
             }
 
-            double aspect = ((Canvas)this.Content).ActualWidth / ((Canvas)this.Content).ActualHeight;
+            double aspect = MainCanvas.ActualWidth / MainCanvas.ActualHeight;
 
             // bounds can't be smaller than canvas
-            Rect bounds = (heightSum < ((Canvas)this.Content).ActualHeight) ?
-                new Rect(0.0, 0.0, ((Canvas)this.Content).ActualWidth, ((Canvas)this.Content).ActualHeight) :
+            Rect bounds = (heightSum < MainCanvas.ActualHeight) ?
+                new Rect(0.0, 0.0, MainCanvas.ActualWidth, MainCanvas.ActualHeight) :
                 new Rect(0.0, 0.0, heightSum * aspect, heightSum);
 
             // PLACE RECTS VIA THE TOPMOST ROW OF LEFTMOST COL ALGORITHM
@@ -380,7 +415,7 @@ namespace ImageArranger
         /// </summary>
         private void DrawRects()
         {
-            grid.ScaleTo(new Size(((Canvas)this.Content).ActualWidth, ((Canvas)this.Content).ActualHeight));
+            grid.ScaleTo(new Size(MainCanvas.ActualWidth, MainCanvas.ActualHeight));
             rects = grid.GetRects(rects.Count);
 
             // DRAW GRID'S BOUNDS
@@ -395,7 +430,7 @@ namespace ImageArranger
             // add Rectangle to Canvas
             Canvas.SetLeft(boundsRect, grid.Bounds.X);
             Canvas.SetTop(boundsRect, grid.Bounds.Y);
-            canvas.Children.Add(boundsRect);
+            MainCanvas.Children.Add(boundsRect);
 
             // DRAW EACH RECT
             foreach (Rect rect in rects)
@@ -414,7 +449,7 @@ namespace ImageArranger
                 // add Rectangle to Canvas
                 Canvas.SetLeft(r, rect.X);
                 Canvas.SetTop(r, rect.Y);
-                canvas.Children.Add(r);
+                MainCanvas.Children.Add(r);
             }
         }
 
@@ -424,7 +459,7 @@ namespace ImageArranger
         /// </summary>
         private void DrawImages()
         {
-            grid.ScaleTo(new Size(((Canvas)this.Content).ActualWidth, ((Canvas)this.Content).ActualHeight));
+            grid.ScaleTo(new Size(MainCanvas.ActualWidth, MainCanvas.ActualHeight));
             rects = grid.GetRects(rects.Count);
 
             for (int i = 0; i < rects.Count; i++)
@@ -434,7 +469,7 @@ namespace ImageArranger
 
                 Canvas.SetLeft(images[i], rects[i].X);
                 Canvas.SetTop(images[i], rects[i].Y);
-                canvas.Children.Add(images[i]);
+                MainCanvas.Children.Add(images[i]);
             }
         }
 
