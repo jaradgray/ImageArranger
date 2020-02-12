@@ -79,7 +79,22 @@ namespace ImageArranger
 
         private void FullScreenCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            // TODO go full-screen
+            // Toggle full-screen
+            if (this.WindowStyle == WindowStyle.SingleBorderWindow)
+            {
+                // Go full screen
+                // changing window visibility fixed full-screen not covering taskbar
+                this.Visibility = Visibility.Collapsed;
+                MainMenu.Visibility = Visibility.Collapsed;
+                WindowStyle = WindowStyle.None;
+                WindowState = WindowState.Maximized;
+                this.Visibility = Visibility.Visible;
+            } else
+            {
+                // Go non-full screen
+                WindowStyle = WindowStyle.SingleBorderWindow;
+                MainMenu.Visibility = Visibility.Visible;
+            }
         }
 
 
