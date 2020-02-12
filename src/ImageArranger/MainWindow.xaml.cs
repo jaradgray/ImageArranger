@@ -72,6 +72,24 @@ namespace ImageArranger
             Process.Start(processName);
         }
 
+        private void OpenCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void OpenCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            // Show an OpenFileDialog; open the selected Arrangement
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Multiselect = false;
+            ofd.Filter = "Image Arranger Arrangements (*.iaa)|*.iaa";
+            Nullable<bool> dialogResult = ofd.ShowDialog();
+            if (dialogResult.HasValue && dialogResult.Value)
+            {
+                OpenArrangement(ofd.FileName);
+            }
+        }
+
         private void SaveCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
@@ -255,6 +273,20 @@ namespace ImageArranger
 
 
         // Methods
+
+        private void OpenArrangement(string filePath)
+        {
+            // Update non-image app data
+            _arrangementPath = filePath;
+            this.Title = System.IO.Path.GetFileName(filePath) + " - " + APP_NAME;
+            IndicateUnsavedChanges(false);
+            // Get data from File at filePath and add images to app's data
+            filenames = File.ReadAllLines(filePath).ToList();
+            GenerateNormalizedLists();
+            ArrangeRects();
+            MainCanvas.Children.Clear();
+            DrawImages();
+        }
 
         private void SaveArrangement()
         {
