@@ -192,7 +192,7 @@ namespace ImageArranger
                         return;
                     }
                 }
-                // Handle more than one file dropped
+                // Handle non-Arrangement file dropped
                 foreach (string s in droppedFilenames)
                 {
                     if (validImageExtensions.Contains(System.IO.Path.GetExtension(s).ToUpperInvariant()))
