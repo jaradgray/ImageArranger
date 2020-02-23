@@ -12,7 +12,7 @@ namespace ImageArranger
     public class FileTimestampModel
     {
         public string FileAbsolutePath { get; set; }
-        public string DirAbsolutePath { get; set; }
-        public long Millis { get; set; }
+        public string ParentDirAbsolutePath { get; set; }
+        public long Timestamp { get; set; }
     }
 }
