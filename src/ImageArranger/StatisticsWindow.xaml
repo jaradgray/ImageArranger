@@ -7,6 +7,64 @@
         mc:Ignorable="d"
         Title="StatisticsWindow" Height="450" Width="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="16" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="16" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="16" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="16" />
+        </Grid.RowDefinitions>
         
+        <!-- Heading area -->
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="1"
+            Text="Statistics" />
+
+        <!-- Sorting and filters -->
+        <StackPanel
+            Grid.Row="2"
+            Grid.Column="1"
+            Grid.ColumnSpan="3"
+            Orientation="Horizontal">
+            
+            <Button
+                Margin="0, 0, 8, 0"
+                Content="Frequent" />
+            <Button
+                Margin="0, 0, 8, 0"
+                Content="Recent" />
+            <Button
+                Margin="0, 0, 8, 0"
+                Content="Start date" />
+            <Button
+                Margin="0, 0, 8, 0"
+                Content="End date" />
+            
+        </StackPanel>
+
+        <!-- Folders area -->
+
+        <!-- Files area -->
+
+        <!-- Preview area -->
+
+        <!-- Bottom area -->
+        <Button
+            Grid.Row="4"
+            Grid.Column="1"
+            Grid.ColumnSpan="3"
+            MaxWidth="100"
+            HorizontalAlignment="Left"
+            Content="Clear all data" />
+
     </Grid>
 </Window>
