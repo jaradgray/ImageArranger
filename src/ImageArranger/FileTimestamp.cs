@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ImageArranger
 {
+    /// <summary>
+    /// Associates an absolute path to a file with a timestamp.
+    /// </summary>
     public class FileTimestamp
     {
         public string FileAbsolutePath { get; set; }

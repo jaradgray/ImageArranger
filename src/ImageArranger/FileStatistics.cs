@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ImageArranger
 {
+    /// <summary>
+    /// Represents a file item in the StatisticsWindow.
+    /// </summary>
     public class FileStatistics
     {
         public string Name { get; set; }
