@@ -11,6 +11,7 @@ namespace ImageArranger
     /// </summary>
     public class FileTimestampModel
     {
+        public int Id { get; set; }
         public string FileAbsolutePath { get; set; }
         public string ParentDirAbsolutePath { get; set; }
         public long Timestamp { get; set; }
