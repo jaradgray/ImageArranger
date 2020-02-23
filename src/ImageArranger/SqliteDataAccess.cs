@@ -10,20 +10,20 @@ namespace ImageArranger
     {
         // API methods
 
-        public static ObservableCollection<FileTimestamp> GetAllTimestamps()
+        public static ObservableCollection<FileTimestampModel> GetAllTimestamps()
         {
             // Safely open a connection to our database
             using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))
             {
                 // Query the database
                 string query = "SELECT * FROM FileTimestamp";
-                var output = dbConnection.Query<FileTimestamp>(query, new DynamicParameters());
+                var output = dbConnection.Query<FileTimestampModel>(query, new DynamicParameters());
                 // Convert output to an ObservableCollection and return it
-                return new ObservableCollection<FileTimestamp>(output);
+                return new ObservableCollection<FileTimestampModel>(output);
             }
         }
 
-        public static void SaveFileTimestamp(FileTimestamp timestamp)
+        public static void SaveFileTimestamp(FileTimestampModel timestamp)
         {
             // Safely open a connection to our database
             using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))

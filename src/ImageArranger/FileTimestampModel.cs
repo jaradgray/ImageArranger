@@ -9,7 +9,7 @@ namespace ImageArranger
     /// <summary>
     /// Associates an absolute path to a file with a timestamp.
     /// </summary>
-    public class FileTimestamp
+    public class FileTimestampModel
     {
         public string FileAbsolutePath { get; set; }
         public string DirAbsolutePath { get; set; }
