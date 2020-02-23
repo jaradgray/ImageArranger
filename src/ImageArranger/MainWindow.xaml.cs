@@ -145,6 +145,17 @@ namespace ImageArranger
             }
         }
 
+        private void StatisticsCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void StatisticsCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            // Show Statistics window
+            new StatisticsWindow().Show();
+        }
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {

@@ -45,6 +45,10 @@
             Command="{x:Static local:Commands.FullScreenCommand}"
             CanExecute="FullScreenCommand_CanExecute"
             Executed="FullScreenCommand_Executed"/>
+        <CommandBinding
+            Command="{x:Static local:Commands.StatisticsCommand}"
+            CanExecute="StatisticsCommand_CanExecute"
+            Executed="StatisticsCommand_Executed"/>
     </Window.CommandBindings>
 
 
@@ -66,6 +70,7 @@
             </MenuItem>
             <MenuItem Header="_View">
                 <MenuItem Header="_Full Screen" Command="{x:Static local:Commands.FullScreenCommand}"/>
+                <MenuItem Header="_Statistics Window" Command="{x:Static local:Commands.StatisticsCommand}"/>
             </MenuItem>
         </Menu>
 

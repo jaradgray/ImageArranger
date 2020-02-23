@@ -15,6 +15,7 @@ namespace ImageArranger
         public static RoutedCommand SaveAsCommand = new RoutedCommand();
         public static RoutedCommand QuitCommand = new RoutedCommand();
         public static RoutedCommand FullScreenCommand = new RoutedCommand();
+        public static RoutedCommand StatisticsCommand = new RoutedCommand();
 
         static Commands()
         {
@@ -24,6 +25,7 @@ namespace ImageArranger
             SaveAsCommand.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Control|ModifierKeys.Shift, "Ctrl+Shift+S"));
             QuitCommand.InputGestures.Add(new KeyGesture(Key.Q, ModifierKeys.Control, "Ctrl+Q"));
             FullScreenCommand.InputGestures.Add(new KeyGesture(Key.F, ModifierKeys.Control, "Ctrl+F"));
+            StatisticsCommand.InputGestures.Add(new KeyGesture(Key.F3, ModifierKeys.None, "F3"));
         }
     }
 }
