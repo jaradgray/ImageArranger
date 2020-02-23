@@ -52,10 +52,111 @@
         </StackPanel>
 
         <!-- Folders area -->
+        <DockPanel
+            Grid.Row="3"
+            Grid.Column="1">
+
+            <ListBox x:Name="foldersListBox">
+                <!-- folder item -->
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="8" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="8" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="8" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="8" />
+                            </Grid.RowDefinitions>
+
+                            <!-- num views -->
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Grid.RowSpan="2"
+                                Text="NumViews" />
+                            <!-- folder icon -->
+                            <Image
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                Grid.RowSpan="2"/>
+                            <!-- folder name -->
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="3" />
+                            <!-- absolute path -->
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="3" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+        </DockPanel>
 
         <!-- Files area -->
+        <DockPanel
+            Grid.Row="3"
+            Grid.Column="2">
+
+            <ListBox x:Name="filesListBox">
+                <!-- file item -->
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="8" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="8" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="8" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="8" />
+                            </Grid.RowDefinitions>
+
+                            <!-- num views -->
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Text="NumViews" />
+                            <!-- file icon -->
+                            <Image
+                                Grid.Row="1"
+                                Grid.Column="2"/>
+                            <!-- file name -->
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="3" />
+                            <!-- date last opened -->
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="4" />
+                            <!-- parent directory name -->
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="5" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+        </DockPanel>
 
         <!-- Preview area -->
+        <Image
+            Margin="16" />
 
         <!-- Bottom area -->
         <Button
