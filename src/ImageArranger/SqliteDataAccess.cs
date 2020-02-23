@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
@@ -6,20 +6,23 @@ using Dapper;
 
 namespace ImageArranger
 {
+    /// <summary>
+    /// Provides access to the Statistics.db sqlite database.
+    /// </summary>
     public class SqliteDataAccess
     {
         // API methods
 
-        public static ObservableCollection<FileTimestampModel> GetAllTimestamps()
+        public static List<FileTimestampModel> GetAllTimestamps_Latest()
         {
             // Safely open a connection to our database
             using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))
             {
                 // Query the database
-                string query = "SELECT * FROM FileTimestamp";
+                string query = "SELECT * FROM FileTimestamp ORDER BY Timestamp DESC";
                 var output = dbConnection.Query<FileTimestampModel>(query, new DynamicParameters());
-                // Convert output to an ObservableCollection and return it
-                return new ObservableCollection<FileTimestampModel>(output);
+                // Convert output to a List and return it
+                return new List<FileTimestampModel>(output);
             }
         }
 
