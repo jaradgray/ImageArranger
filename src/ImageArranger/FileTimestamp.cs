@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace ImageArranger
 {
-    class FileTimestamp
+    public class FileTimestamp
     {
+        public string FileAbsolutePath { get; set; }
+        public string DirAbsolutePath { get; set; }
+        public long Millis { get; set; }
     }
 }

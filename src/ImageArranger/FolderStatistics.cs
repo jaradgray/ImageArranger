@@ -6,7 +6,19 @@ using System.Threading.Tasks;
 
 namespace ImageArranger
 {
-    class FolderStatistics
+    public class FolderStatistics
     {
+        public string AbsolutePath { get; set; }
+
+        public string Name
+        {
+            get;
+        }
+
+        public int NumViews
+        {
+            get;
+            set;
+        }
     }
 }
