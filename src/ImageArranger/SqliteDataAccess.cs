@@ -13,6 +13,34 @@ namespace ImageArranger
     {
         // API methods
 
+        public static List<string> GetUniqueFilePaths()
+        {
+            // Safely open a connection to our database
+            using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                // Query the database
+                string query = "SELECT DISTINCT FileAbsolutePath FROM FileTimestamp";
+                var output = dbConnection.Query<string>(query, new DynamicParameters());
+                // Convert output to a List and return it
+                return new List<string>(output);
+            }
+        }
+
+        public static List<FileTimestampModel> GetAllTimestampsForFile(string fileAbsolutePath)
+        {
+            // Safely open a connection to our database
+            using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                // Query the database
+                // TODO is this syntax right ?
+                string query = "SELECT * FROM FileTimestamp WHERE FileAbsolutePath = @FileAbsolutePath ORDER BY Timestamp DESC";
+                var parameters = new { FileAbsolutePath = fileAbsolutePath };
+                var output = dbConnection.Query<FileTimestampModel>(query, parameters);
+                // Convert output to a List and return it
+                return new List<FileTimestampModel>(output);
+            }
+        }
+
         public static List<FileTimestampModel> GetAllTimestamps_Latest()
         {
             // Safely open a connection to our database

@@ -130,23 +130,30 @@
                             <TextBlock
                                 Grid.Row="1"
                                 Grid.Column="1"
-                                Text="NumViews" />
+                                Margin="0, 0, 8, 0"
+                                Text="{Binding NumViews}" />
                             <!-- file icon -->
                             <Image
                                 Grid.Row="1"
-                                Grid.Column="2"/>
+                                Grid.Column="2"
+                                Margin="0, 0, 8, 0"/>
                             <!-- file name -->
                             <TextBlock
                                 Grid.Row="1"
-                                Grid.Column="3" />
+                                Grid.Column="3"
+                                Margin="0, 0, 8, 0"
+                                Text="{Binding Name}" />
                             <!-- date last opened -->
                             <TextBlock
                                 Grid.Row="1"
-                                Grid.Column="4" />
+                                Grid.Column="4"
+                                Margin="0, 0, 8, 0"
+                                Text="{Binding TimestampLastOpened}" />
                             <!-- parent directory name -->
                             <TextBlock
                                 Grid.Row="1"
-                                Grid.Column="5" />
+                                Grid.Column="5"
+                                Text="{Binding ParentDirName}" />
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

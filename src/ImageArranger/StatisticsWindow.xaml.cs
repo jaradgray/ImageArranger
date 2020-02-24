@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +20,35 @@ namespace ImageArranger
     /// </summary>
     public partial class StatisticsWindow : Window
     {
+        // Instance variables
+
+        public ObservableCollection<FileStatisticsModel> fileStatisticsCollection = new ObservableCollection<FileStatisticsModel>();
+
+
+        // Constructor
+
         public StatisticsWindow()
         {
             InitializeComponent();
+
+            LoadFileStatistics();
+        }
+
+
+        // Private methods
+
+        private void LoadFileStatistics()
+        {
+            // TODO generate the list of FileStatisticsModels that we'll display
+            //  Right now it's just one element for each unique file represented in the database
+            List<string> uniqueFilePaths = SqliteDataAccess.GetUniqueFilePaths();
+            foreach (string filePath in uniqueFilePaths)
+            {
+                List<FileTimestampModel> allTimestamps = SqliteDataAccess.GetAllTimestampsForFile(filePath);
+                fileStatisticsCollection.Add(new FileStatisticsModel(filePath, allTimestamps));
+            }
+
+            filesListBox.ItemsSource = fileStatisticsCollection;
         }
     }
 }
