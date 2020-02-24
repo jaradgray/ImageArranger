@@ -9,8 +9,15 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="16" />
+            <!-- folder statistics column -->
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
+            <!-- GridSplitter column -->
+            <ColumnDefinition Width="auto" />
+            <!-- file statistics column -->
+            <ColumnDefinition Width="auto" />
+            <!-- GridSplitter column -->
+            <ColumnDefinition Width="auto" />
+            <!-- preview column -->
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="16" />
         </Grid.ColumnDefinitions>
@@ -27,13 +34,14 @@
         <TextBlock
             Grid.Row="1"
             Grid.Column="1"
+            Grid.ColumnSpan="5"
             Text="Statistics" />
 
         <!-- Sorting and filters -->
         <StackPanel
             Grid.Row="2"
             Grid.Column="1"
-            Grid.ColumnSpan="3"
+            Grid.ColumnSpan="5"
             Orientation="Horizontal">
             
             <Button x:Name="frequentButton"
@@ -103,10 +111,18 @@
 
         </DockPanel>
 
+        <GridSplitter
+            Grid.Row="3"
+            Grid.Column="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch"
+            Background="Gray"
+            Width="5"/>
+
         <!-- Files area -->
         <DockPanel
             Grid.Row="3"
-            Grid.Column="2">
+            Grid.Column="3">
 
             <ListView x:Name="filesListView">
                 <ListView.View>
@@ -134,6 +150,14 @@
 
         </DockPanel>
 
+        <GridSplitter
+            Grid.Row="3"
+            Grid.Column="4"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch"
+            Background="Gray"
+            Width="5" />
+
         <!-- Preview area -->
         <Image
             Margin="16" />
@@ -142,7 +166,7 @@
         <Button
             Grid.Row="4"
             Grid.Column="1"
-            Grid.ColumnSpan="3"
+            Grid.ColumnSpan="5"
             MaxWidth="100"
             HorizontalAlignment="Left"
             Content="Clear all data" />
