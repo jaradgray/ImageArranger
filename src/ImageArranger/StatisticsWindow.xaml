@@ -14,7 +14,7 @@
             <!-- GridSplitter column -->
             <ColumnDefinition Width="auto" />
             <!-- file statistics column -->
-            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="500" />
             <!-- GridSplitter column -->
             <ColumnDefinition Width="auto" />
             <!-- preview column -->
@@ -133,11 +133,11 @@
                             DisplayMemberBinding="{Binding NumViews}" />
 
                         <GridViewColumn Header="Name"
-                            Width="100"
+                            Width="150"
                             DisplayMemberBinding="{Binding Name}" />
 
                         <GridViewColumn Header="Last Opened"
-                            Width="100"
+                            Width="150"
                             DisplayMemberBinding="{Binding TimestampLastOpened}" />
 
                         <GridViewColumn Header="Directory"
