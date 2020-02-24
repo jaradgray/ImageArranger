@@ -74,6 +74,8 @@ namespace ImageArranger
                 // Get the selected item's AbsolutePath attribute
                 string path = selected.AbsolutePath;
 
+                // TODO handle preview for .iaa files
+
                 // If the selected item's path leads to an image...
                 string[] validImageExtensions = { ".BMP", ".GIF", ".JPEG", ".JPG", ".PNG" };
                 if (validImageExtensions.Contains(System.IO.Path.GetExtension(path).ToUpperInvariant()))
