@@ -33,7 +33,7 @@ namespace ImageArranger
             {
                 // Query the database
                 // TODO is this syntax right ?
-                string query = "SELECT * FROM FileTimestamp WHERE FileAbsolutePath = @FileAbsolutePath ORDER BY Timestamp DESC";
+                string query = "SELECT * FROM FileTimestamp WHERE FileAbsolutePath = @FileAbsolutePath ORDER BY Ticks DESC";
                 var parameters = new { FileAbsolutePath = fileAbsolutePath };
                 var output = dbConnection.Query<FileTimestampModel>(query, parameters);
                 // Convert output to a List and return it
@@ -47,7 +47,7 @@ namespace ImageArranger
             using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))
             {
                 // Query the database
-                string query = "SELECT * FROM FileTimestamp ORDER BY Timestamp DESC";
+                string query = "SELECT * FROM FileTimestamp ORDER BY Ticks DESC";
                 var output = dbConnection.Query<FileTimestampModel>(query, new DynamicParameters());
                 // Convert output to a List and return it
                 return new List<FileTimestampModel>(output);

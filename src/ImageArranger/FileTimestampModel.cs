@@ -14,6 +14,16 @@ namespace ImageArranger
         public int Id { get; set; }
         public string FileAbsolutePath { get; set; }
         public string ParentDirAbsolutePath { get; set; }
-        public long Timestamp { get; set; }
+        public long Ticks { get; set; }
+
+
+        // Methods
+
+        public override string ToString()
+        {
+            // TODO format timestamp as date string
+            DateTime date = new DateTime(Ticks);
+            return "" + date;
+        }
     }
 }
