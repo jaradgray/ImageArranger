@@ -48,7 +48,7 @@ namespace ImageArranger
                 fileStatisticsCollection.Add(new FileStatisticsModel(filePath, allTimestamps));
             }
 
-            filesListBox.ItemsSource = fileStatisticsCollection;
+            filesListView.ItemsSource = fileStatisticsCollection;
         }
     }
 }

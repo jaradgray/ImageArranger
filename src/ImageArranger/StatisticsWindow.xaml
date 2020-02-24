@@ -106,58 +106,29 @@
             Grid.Row="3"
             Grid.Column="2">
 
-            <ListBox x:Name="filesListBox">
-                <!-- file item -->
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="8" />
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="8" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="8" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="8" />
-                            </Grid.RowDefinitions>
+            <ListView x:Name="filesListView">
+                <ListView.View>
+                    <GridView>
 
-                            <!-- num views -->
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Margin="0, 0, 8, 0"
-                                Text="{Binding NumViews}" />
-                            <!-- file icon -->
-                            <Image
-                                Grid.Row="1"
-                                Grid.Column="2"
-                                Margin="0, 0, 8, 0"/>
-                            <!-- file name -->
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="3"
-                                Margin="0, 0, 8, 0"
-                                Text="{Binding Name}" />
-                            <!-- date last opened -->
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="4"
-                                Margin="0, 0, 8, 0"
-                                Text="{Binding TimestampLastOpened}" />
-                            <!-- parent directory name -->
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="5"
-                                Text="{Binding ParentDirName}" />
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                        <GridViewColumn Header="Views"
+                            Width="50"
+                            DisplayMemberBinding="{Binding NumViews}" />
+
+                        <GridViewColumn Header="Name"
+                            Width="100"
+                            DisplayMemberBinding="{Binding Name}" />
+
+                        <GridViewColumn Header="Last Opened"
+                            Width="100"
+                            DisplayMemberBinding="{Binding TimestampLastOpened}" />
+
+                        <GridViewColumn Header="Directory"
+                            Width="100"
+                            DisplayMemberBinding="{Binding ParentDirName}" />
+
+                    </GridView>
+                </ListView.View>
+            </ListView>
 
         </DockPanel>
 
