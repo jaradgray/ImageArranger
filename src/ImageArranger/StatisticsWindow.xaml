@@ -5,20 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ImageArranger"
         mc:Ignorable="d"
-        Title="StatisticsWindow" Height="450" Width="800">
+        Title="StatisticsWindow" Height="600" Width="1200">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="16" />
             <!-- folder statistics column -->
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="300"
+                MinWidth="100"/>
             <!-- GridSplitter column -->
             <ColumnDefinition Width="auto" />
             <!-- file statistics column -->
-            <ColumnDefinition Width="500" />
+            <ColumnDefinition Width="*"
+                MinWidth="100" />
             <!-- GridSplitter column -->
             <ColumnDefinition Width="auto" />
             <!-- preview column -->
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="300"
+                MinWidth="200" />
             <ColumnDefinition Width="16" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
