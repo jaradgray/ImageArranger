@@ -124,7 +124,9 @@
             Grid.Row="3"
             Grid.Column="3">
 
-            <ListView x:Name="filesListView">
+            <ListView x:Name="filesListView"
+                SelectionMode="Single"
+                SelectionChanged="FilesListView_SelectionChanged">
                 <ListView.View>
                     <GridView>
 
@@ -159,8 +161,11 @@
             Width="5" />
 
         <!-- Preview area -->
-        <Image
-            Margin="16" />
+        <Image x:Name="previewImage"
+            Grid.Row="3"
+            Grid.Column="5"
+            Margin="16"
+            Stretch="Uniform"/>
 
         <!-- Bottom area -->
         <Button

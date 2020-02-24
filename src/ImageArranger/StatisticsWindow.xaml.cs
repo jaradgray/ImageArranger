@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace ImageArranger
 {
@@ -64,6 +65,29 @@ namespace ImageArranger
             LoadFileStatistics(SortMode.Recent);
         }
 
+        private void FilesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count == 1)
+            {
+                // Cast the selected item to a FileStatisticsModel object
+                FileStatisticsModel selected = (FileStatisticsModel) e.AddedItems[0];
+                // Get the selected item's AbsolutePath attribute
+                string path = selected.AbsolutePath;
+
+                // If the selected item's path leads to an image...
+                string[] validImageExtensions = { ".BMP", ".GIF", ".JPEG", ".JPG", ".PNG" };
+                if (validImageExtensions.Contains(System.IO.Path.GetExtension(path).ToUpperInvariant()))
+                {
+                    // Set preview Image's source to the selected item's AbsolutePath
+                    previewImage.Source = new BitmapImage(new Uri(path));
+                }
+            }
+            else
+            {
+                previewImage.Source = null;
+            }
+        }
+
 
         // Private methods
 
@@ -96,7 +120,6 @@ namespace ImageArranger
             filesListView.ItemsSource = fileStatisticsCollection;
         }
 
-
-
+        
     }
 }
