@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,15 +33,16 @@ namespace ImageArranger
         // Constructor
         public FileStatisticsModel(string absolutePath, List<FileTimestampModel> allTimestamps)
         {
+            // Set properties from parameters
             AbsolutePath = absolutePath;
             AllTimestamps = allTimestamps;
 
-            // TODO set the following correctly
-            Name = "Name";
-            ParentDirAbsolutePath = "ParentDirAbsolutePath";
+            // Set other properties
+            Name = Path.GetFileName(absolutePath);
+            ParentDirAbsolutePath = Path.GetDirectoryName(absolutePath);
+            ParentDirName = Path.GetFileName(ParentDirAbsolutePath);
             TimestampLastOpened = allTimestamps[0]; // TODO will this work in production? Must guarantee that the list of all timestamps is always ordered by timestamp descending
             NumViews = allTimestamps.Count;
-            ParentDirName = "ParentDirName";
         }
     }
 }
