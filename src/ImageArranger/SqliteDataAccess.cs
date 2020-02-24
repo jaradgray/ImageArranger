@@ -59,7 +59,9 @@ namespace ImageArranger
             // Safely open a connection to our database
             using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))
             {
-                // TODO Create a record in FileTimestamp table to represent the given timestamp
+                // Create a record in FileTimestamp table to represent the given timestamp
+                string sql = "INSERT INTO FileTimestamp (FileAbsolutePath, ParentDirAbsolutePath, Ticks) VALUES (@FileAbsolutePath, @ParentDirAbsolutePath, @Ticks)";
+                dbConnection.Execute(sql, timestamp);
             }
         }
 

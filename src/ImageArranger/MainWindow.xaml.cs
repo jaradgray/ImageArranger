@@ -211,6 +211,11 @@ namespace ImageArranger
                         // add s to filenames if it's not already there
                         if (!filenames.Contains(s))
                         {
+                            // Add a FileTimestamp record to the database
+                            DateTime now = DateTime.Now;
+                            FileTimestampModel timestamp = new FileTimestampModel(s, now.Ticks);
+                            SqliteDataAccess.SaveFileTimestamp(timestamp);
+
                             filenames.Add(s);
                             fileAdded = true;
                         }
