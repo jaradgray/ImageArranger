@@ -26,6 +26,12 @@ namespace ImageArranger
             }
         }
 
+        /// <summary>
+        /// Returns a List of all FileTimestampModel records in the database whose FileAbsolutePath property
+        /// matches the given string, ordered by Ticks descending.
+        /// </summary>
+        /// <param name="fileAbsolutePath"></param>
+        /// <returns></returns>
         public static List<FileTimestampModel> GetAllTimestampsForFile(string fileAbsolutePath)
         {
             // Safely open a connection to our database

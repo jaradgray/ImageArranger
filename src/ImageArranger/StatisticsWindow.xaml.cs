@@ -20,6 +20,23 @@ namespace ImageArranger
     /// </summary>
     public partial class StatisticsWindow : Window
     {
+        // TODO this does not belong in the code-behind
+        /// <summary>
+        /// The different modes for ordering displayed file and folder statistics items
+        /// </summary>
+        public enum SortMode
+        {
+            /// <summary>
+            /// Order by views, descending
+            /// </summary>
+            Frequent,
+
+            /// <summary>
+            /// Order by timestamp last viewed, descending
+            /// </summary>
+            Recent
+        }
+
         // Instance variables
 
         public ObservableCollection<FileStatisticsModel> fileStatisticsCollection = new ObservableCollection<FileStatisticsModel>();
@@ -31,16 +48,29 @@ namespace ImageArranger
         {
             InitializeComponent();
 
-            LoadFileStatistics();
+            LoadFileStatistics(SortMode.Frequent);
+        }
+
+
+        // Event handlers
+
+        private void FrequentButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadFileStatistics(SortMode.Frequent);
+        }
+
+        private void RecentButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadFileStatistics(SortMode.Recent);
         }
 
 
         // Private methods
 
-        private void LoadFileStatistics()
+        private void LoadFileStatistics(SortMode sortMode)
         {
-            // TODO generate the list of FileStatisticsModels that we'll display
-            //  Right now it's just one element for each unique file represented in the database
+            // Build a collection of FileStatisticsModels, with one element for each unique file represented in the database
+            fileStatisticsCollection = new ObservableCollection<FileStatisticsModel>();
             List<string> uniqueFilePaths = SqliteDataAccess.GetUniqueFilePaths();
             foreach (string filePath in uniqueFilePaths)
             {
@@ -48,7 +78,25 @@ namespace ImageArranger
                 fileStatisticsCollection.Add(new FileStatisticsModel(filePath, allTimestamps));
             }
 
+            // Re-order the collection based on sortMode parameter
+            switch (sortMode)
+            {
+                case SortMode.Frequent:
+                    // Order by NumViews property
+                    fileStatisticsCollection = new ObservableCollection<FileStatisticsModel>(fileStatisticsCollection.OrderByDescending(fsm => fsm.NumViews));
+                    break;
+
+                case SortMode.Recent:
+                    // Order by last opened Ticks property
+                    fileStatisticsCollection = new ObservableCollection<FileStatisticsModel>(fileStatisticsCollection.OrderByDescending(fsm => fsm.TimestampLastOpened.Ticks));
+                    break;
+            }
+
+            // Set filesListView's ItemsSource property
             filesListView.ItemsSource = fileStatisticsCollection;
         }
+
+
+
     }
 }

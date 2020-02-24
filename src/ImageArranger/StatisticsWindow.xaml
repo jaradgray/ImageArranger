@@ -36,12 +36,14 @@
             Grid.ColumnSpan="3"
             Orientation="Horizontal">
             
-            <Button
+            <Button x:Name="frequentButton"
                 Margin="0, 0, 8, 0"
-                Content="Frequent" />
-            <Button
+                Content="Frequent"
+                Click="FrequentButton_Click"/>
+            <Button x:Name="recentButton"
                 Margin="0, 0, 8, 0"
-                Content="Recent" />
+                Content="Recent"
+                Click="RecentButton_Click"/>
             <Button
                 Margin="0, 0, 8, 0"
                 Content="Start date" />
