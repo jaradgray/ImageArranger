@@ -73,7 +73,11 @@ namespace ImageArranger
 
         private void tboxPath_TextChanged(object sender, TextChangedEventArgs e)
         {
-            btnUpdatePath.Visibility = (tboxPath.Text.Equals(mFilePath)) ? Visibility.Hidden : Visibility.Visible;
+            string text = tboxPath.Text;
+            btnUpdatePath.Visibility = (text.Equals(mFilePath)) ? Visibility.Collapsed : Visibility.Visible;
+
+            // Indicate whether tboxPath's text is a real file path
+            tbFileNotFound.Visibility = (System.IO.File.Exists(text)) ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void btnUpdatePath_Click(object sender, RoutedEventArgs e)
