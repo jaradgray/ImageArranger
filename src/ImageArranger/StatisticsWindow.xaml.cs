@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
+using System.Diagnostics;
 
 namespace ImageArranger
 {
@@ -213,6 +214,26 @@ namespace ImageArranger
             LoadStatistics(mTimeFrame, mSortMode);
         }
 
+        /// <summary>
+        /// Starts a File Explorer process and navigates to filesListView's selected item's file.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void filesListViewCM_RevealInExplorer_Click(object sender, RoutedEventArgs e)
+        {
+            FileStatisticsModel selectedItem = (FileStatisticsModel)filesListView.SelectedItem;
+            if (selectedItem == null) return;
+            if (!File.Exists(selectedItem.AbsolutePath)) return;
+
+            // Launch File Explorer and select the file corresponding to selectedItem
+            ProcessStartInfo startInfo = new ProcessStartInfo
+            {
+                Arguments = "/select, " + selectedItem.AbsolutePath /* command-line arguments */,
+                FileName = "explorer.exe"
+            };
+            Process.Start(startInfo);
+        }
+
 
         // Private methods
 
@@ -369,7 +390,6 @@ namespace ImageArranger
             return result;
         }
 
-
-
+        
     }
 }
