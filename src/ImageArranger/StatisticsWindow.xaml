@@ -46,15 +46,16 @@
             Grid.Column="1"
             Grid.ColumnSpan="5"
             Orientation="Horizontal">
-            
-            <Button x:Name="frequentButton"
-                Margin="0, 0, 8, 0"
-                Content="Frequent"
-                Click="FrequentButton_Click"/>
-            <Button x:Name="recentButton"
+
+            <TextBlock Text="Order by:"
+                Margin="0, 0, 8, 0" />
+            <ComboBox x:Name="cmbSortMode"
                 Margin="0, 0, 16, 0"
-                Content="Recent"
-                Click="RecentButton_Click"/>
+                SelectedIndex="0"
+                SelectionChanged="CmbSortMode_SelectionChanged">
+                <ComboBoxItem>Most Views</ComboBoxItem>
+                <ComboBoxItem>Most Recently Viewed</ComboBoxItem>
+            </ComboBox>
             <TextBlock Text="Range:"
                 Margin="0, 0, 8, 0" />
             <ComboBox x:Name="cmbTimeFrame"

@@ -96,15 +96,23 @@ namespace ImageArranger
 
         // Event handlers
 
-        private void FrequentButton_Click(object sender, RoutedEventArgs e)
+        private void CmbSortMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            mSortMode = SortMode.Frequent;
-            LoadFileStatistics(mTimeFrame, mSortMode);
-        }
+            // Set mSortMode based on currently selected index
+            switch (cmbSortMode.SelectedIndex)
+            {
+                // most views
+                case 0:
+                    mSortMode = SortMode.Frequent;
+                    break;
 
-        private void RecentButton_Click(object sender, RoutedEventArgs e)
-        {
-            mSortMode = SortMode.Recent;
+                // most recently viewed
+                case 1:
+                    mSortMode = SortMode.Recent;
+                    break;
+            }
+
+            // Update displayed items
             LoadFileStatistics(mTimeFrame, mSortMode);
         }
 
