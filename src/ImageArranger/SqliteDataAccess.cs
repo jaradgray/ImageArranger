@@ -13,6 +13,10 @@ namespace ImageArranger
     {
         // API methods
 
+        /// <summary>
+        /// Returns a List containing each unique FileAbsolutePath value stored in the database
+        /// </summary>
+        /// <returns></returns>
         public static List<string> GetUniqueFilePaths()
         {
             // Safely open a connection to our database
@@ -27,34 +31,23 @@ namespace ImageArranger
         }
 
         /// <summary>
-        /// Returns a List of all FileTimestampModel records in the database whose FileAbsolutePath property
-        /// matches the given string, ordered by Ticks descending.
+        /// Returns a List of FileTimestampModel records in the database whose FileAbsolutePath property
+        /// matches the given string and whose Ticks property is between @minTicks and @maxTicks (both inclusive),
+        /// ordered by Ticks descending.
         /// </summary>
         /// <param name="fileAbsolutePath"></param>
+        /// <param name="minTicks"></param>
+        /// <param name="maxTicks"></param>
         /// <returns></returns>
-        public static List<FileTimestampModel> GetAllTimestampsForFile(string fileAbsolutePath)
+        public static List<FileTimestampModel> GetTimestampsForFileInTimeFrame(string fileAbsolutePath, long minTicks, long maxTicks)
         {
             // Safely open a connection to our database
             using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))
             {
                 // Query the database
-                // TODO is this syntax right ?
-                string query = "SELECT * FROM FileTimestamp WHERE FileAbsolutePath = @FileAbsolutePath ORDER BY Ticks DESC";
-                var parameters = new { FileAbsolutePath = fileAbsolutePath };
+                string query = "SELECT * FROM FileTimestamp WHERE FileAbsolutePath = @FileAbsolutePath AND Ticks >= " + minTicks + " AND Ticks <= " + maxTicks + " ORDER BY Ticks DESC";
+                var parameters = new { FileAbsolutePath = fileAbsolutePath};
                 var output = dbConnection.Query<FileTimestampModel>(query, parameters);
-                // Convert output to a List and return it
-                return new List<FileTimestampModel>(output);
-            }
-        }
-
-        public static List<FileTimestampModel> GetAllTimestamps_Latest()
-        {
-            // Safely open a connection to our database
-            using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))
-            {
-                // Query the database
-                string query = "SELECT * FROM FileTimestamp ORDER BY Ticks DESC";
-                var output = dbConnection.Query<FileTimestampModel>(query, new DynamicParameters());
                 // Convert output to a List and return it
                 return new List<FileTimestampModel>(output);
             }

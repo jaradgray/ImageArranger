@@ -52,16 +52,25 @@
                 Content="Frequent"
                 Click="FrequentButton_Click"/>
             <Button x:Name="recentButton"
-                Margin="0, 0, 8, 0"
+                Margin="0, 0, 16, 0"
                 Content="Recent"
                 Click="RecentButton_Click"/>
-            <Button
-                Margin="0, 0, 8, 0"
-                Content="Start date" />
-            <Button
-                Margin="0, 0, 8, 0"
-                Content="End date" />
-            
+            <TextBlock Text="Range:"
+                Margin="0, 0, 8, 0" />
+            <ComboBox x:Name="cmbTimeFrame"
+                SelectedIndex="5"
+                SelectionChanged="CmbTimeFrame_SelectionChanged">
+                <ComboBoxItem>24 Hours</ComboBoxItem>
+                <ComboBoxItem>3 Days</ComboBoxItem>
+                <ComboBoxItem>Week</ComboBoxItem>
+                <ComboBoxItem>Month</ComboBoxItem>
+                <ComboBoxItem>Year</ComboBoxItem>
+                <ComboBoxItem>All Time</ComboBoxItem>
+                <ComboBoxItem>30 Seconds</ComboBoxItem>
+                <ComboBoxItem>Minute</ComboBoxItem>
+                <ComboBoxItem>3 Minutes</ComboBoxItem>
+            </ComboBox>
+
         </StackPanel>
 
         <!-- Folders area -->
