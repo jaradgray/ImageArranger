@@ -66,7 +66,7 @@
     </ApplicationDefinition>
     <Compile Include="FileStatisticsModel.cs" />
     <Compile Include="FileTimestampModel.cs" />
-    <Compile Include="FolderStatistics.cs" />
+    <Compile Include="FolderStatisticsModel.cs" />
     <Compile Include="SqliteDataAccess.cs" />
     <Compile Include="StatisticsWindow.xaml.cs">
       <DependentUpon>StatisticsWindow.xaml</DependentUpon>

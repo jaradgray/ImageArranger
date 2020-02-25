@@ -31,6 +31,23 @@ namespace ImageArranger
         }
 
         /// <summary>
+        /// Returns a List containing each unique ParentDirAbsolutePath value stored in the database
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> GetUniqueDirectoryPaths()
+        {
+            // Safely open a connection to our database
+            using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                // Query the database
+                string query = "SELECT DISTINCT ParentDirAbsolutePath FROM FileTimestamp";
+                var output = dbConnection.Query<string>(query, new DynamicParameters());
+                // Convert output to a List and return it
+                return new List<string>(output);
+            }
+        }
+
+        /// <summary>
         /// Returns a List of FileTimestampModel records in the database whose FileAbsolutePath property
         /// matches the given string and whose Ticks property is between @minTicks and @maxTicks (both inclusive),
         /// ordered by Ticks descending.
@@ -47,6 +64,29 @@ namespace ImageArranger
                 // Query the database
                 string query = "SELECT * FROM FileTimestamp WHERE FileAbsolutePath = @FileAbsolutePath AND Ticks >= " + minTicks + " AND Ticks <= " + maxTicks + " ORDER BY Ticks DESC";
                 var parameters = new { FileAbsolutePath = fileAbsolutePath};
+                var output = dbConnection.Query<FileTimestampModel>(query, parameters);
+                // Convert output to a List and return it
+                return new List<FileTimestampModel>(output);
+            }
+        }
+
+        /// <summary>
+        /// Returns a List of FileTimestampModel records in the database whose ParentDirAbsolutePath property
+        /// matches the given string and whose Ticks property is between @minTicks and @maxTicks (both inclusive),
+        /// ordered by Ticks descending.
+        /// </summary>
+        /// <param name="parentDirAbsolutePath"></param>
+        /// <param name="minTicks"></param>
+        /// <param name="maxTicks"></param>
+        /// <returns></returns>
+        public static List<FileTimestampModel> GetTimestampsForDirectoryInTimeFrame(string parentDirAbsolutePath, long minTicks, long maxTicks)
+        {
+            // Safely open a connection to our database
+            using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                // Query the database
+                string query = "SELECT * FROM FileTimestamp WHERE ParentDirAbsolutePath = @ParentDirAbsolutePath AND Ticks >= " + minTicks + " AND Ticks <= " + maxTicks + " ORDER BY Ticks DESC";
+                var parameters = new { ParentDirAbsolutePath = parentDirAbsolutePath };
                 var output = dbConnection.Query<FileTimestampModel>(query, parameters);
                 // Convert output to a List and return it
                 return new List<FileTimestampModel>(output);

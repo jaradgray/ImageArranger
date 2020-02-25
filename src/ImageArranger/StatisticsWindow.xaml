@@ -79,48 +79,22 @@
             Grid.Row="3"
             Grid.Column="1">
 
-            <ListBox x:Name="foldersListBox">
-                <!-- folder item -->
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="8" />
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="8" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="8" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="8" />
-                            </Grid.RowDefinitions>
+            <ListView x:Name="foldersListView"
+                SelectionChanged="FoldersListView_SelectionChanged">
+                <ListView.View>
+                    <GridView>
 
-                            <!-- num views -->
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Grid.RowSpan="2"
-                                Text="NumViews" />
-                            <!-- folder icon -->
-                            <Image
-                                Grid.Row="1"
-                                Grid.Column="2"
-                                Grid.RowSpan="2"/>
-                            <!-- folder name -->
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="3" />
-                            <!-- absolute path -->
-                            <TextBlock
-                                Grid.Row="2"
-                                Grid.Column="3" />
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                        <GridViewColumn Header="Views"
+                            Width="50"
+                            DisplayMemberBinding="{Binding NumViews}" />
+
+                        <GridViewColumn Header="Name"
+                            Width="200"
+                            DisplayMemberBinding="{Binding Name}" />
+
+                    </GridView>
+                </ListView.View>
+            </ListView>
 
         </DockPanel>
 

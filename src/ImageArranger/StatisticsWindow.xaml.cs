@@ -55,6 +55,7 @@ namespace ImageArranger
         // Instance variables
 
         public ObservableCollection<FileStatisticsModel> fileStatisticsCollection = new ObservableCollection<FileStatisticsModel>();
+        public ObservableCollection<FolderStatisticsModel> folderStatisticsCollection = new ObservableCollection<FolderStatisticsModel>();
         private SortMode mSortMode = SortMode.Frequent;
         private TimeFrame mTimeFrame = TimeFrame.AllTime;
 
@@ -68,6 +69,7 @@ namespace ImageArranger
             // TODO delete the following section
             // Populate database with dummy data to test timeframe filtering
             // Testing filtering files by time frame
+            //long oneSecAgo = DateTime.Now.AddSeconds(-1).Ticks;
             //long today = new DateTime(2020, 2, 24).Ticks;
             //long yesterday = new DateTime(2020, 2, 23).Ticks;
             //long thrusday = new DateTime(2020, 2, 20).Ticks;
@@ -75,6 +77,7 @@ namespace ImageArranger
             //long jan1 = new DateTime(2020, 1, 1).Ticks;
             //long jul7 = new DateTime(2019, 7, 7).Ticks;
             //long longAgo = new DateTime(1920, 7, 7).Ticks;
+            //FileTimestampModel timestamp0 = new FileTimestampModel("A:\\Grandparent\\Parent\\jul7.jpg", oneSecAgo);
             //FileTimestampModel timestamp1 = new FileTimestampModel("A:\\Grandparent\\Parent\\today.jpg", today);
             //FileTimestampModel timestamp2 = new FileTimestampModel("A:\\Grandparent\\Parent\\yesterday.jpg", yesterday);
             //FileTimestampModel timestamp3 = new FileTimestampModel("A:\\Grandparent\\Parent\\thursday.jpg", thrusday);
@@ -82,6 +85,7 @@ namespace ImageArranger
             //FileTimestampModel timestamp5 = new FileTimestampModel("A:\\Grandparent\\Parent\\jan1.jpg", jan1);
             //FileTimestampModel timestamp6 = new FileTimestampModel("A:\\Grandparent\\Parent\\jul7.jpg", jul7);
             //FileTimestampModel timestamp7 = new FileTimestampModel("A:\\Grandparent\\Parent\\jul7.jpg", longAgo);
+            //SqliteDataAccess.SaveFileTimestamp(timestamp0);
             //SqliteDataAccess.SaveFileTimestamp(timestamp1);
             //SqliteDataAccess.SaveFileTimestamp(timestamp2);
             //SqliteDataAccess.SaveFileTimestamp(timestamp3);
@@ -90,7 +94,7 @@ namespace ImageArranger
             //SqliteDataAccess.SaveFileTimestamp(timestamp6);
             //SqliteDataAccess.SaveFileTimestamp(timestamp7);
 
-            LoadFileStatistics(mTimeFrame, mSortMode);
+            LoadStatistics(mTimeFrame, mSortMode);
         }
 
 
@@ -113,7 +117,7 @@ namespace ImageArranger
             }
 
             // Update displayed items
-            LoadFileStatistics(mTimeFrame, mSortMode);
+            LoadStatistics(mTimeFrame, mSortMode);
         }
 
         private void FilesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -146,6 +150,11 @@ namespace ImageArranger
             {
                 previewImage.Source = null;
             }
+        }
+
+        private void FoldersListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
 
         private void CmbTimeFrame_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -195,12 +204,24 @@ namespace ImageArranger
                     break;
             }
 
-            LoadFileStatistics(mTimeFrame, mSortMode);
+            LoadStatistics(mTimeFrame, mSortMode);
         }
 
 
         // Private methods
 
+        private void LoadStatistics(TimeFrame timeFrame, SortMode sortMode)
+        {
+            LoadFileStatistics(timeFrame, sortMode);
+            LoadFolderStatistics(timeFrame, sortMode);
+        }
+
+        /// <summary>
+        /// Populate fileStatisticsCollection with elements representing each unique file in the database
+        /// within @timeFrame, order the collection according to @sortMode, and display the list in filesListView.
+        /// </summary>
+        /// <param name="timeFrame"></param>
+        /// <param name="sortMode"></param>
         private void LoadFileStatistics(TimeFrame timeFrame, SortMode sortMode)
         {
             if (filesListView == null) return;
@@ -274,6 +295,55 @@ namespace ImageArranger
             filesListView.ItemsSource = fileStatisticsCollection;
         }
 
-        
+        /// <summary>
+        /// Populate folderStatisticsCollection with elements representing each unique parent directory in the database
+        /// within @timeFrame, order the collection according to @sortMode, and display the list in foldersListView.
+        /// </summary>
+        /// <param name="timeFrame"></param>
+        /// <param name="sortMode"></param>
+        private void LoadFolderStatistics(TimeFrame timeFrame, SortMode sortMode)
+        {
+            if (foldersListView == null) return;
+
+            // Get min Ticks for the given TimeFrame
+            long minTicks = timeFrame.Equals(TimeFrame.Year) ? DateTime.Now.AddYears(-1).Ticks
+                : timeFrame.Equals(TimeFrame.Month) ? DateTime.Now.AddMonths(-1).Ticks
+                : timeFrame.Equals(TimeFrame.Week) ? DateTime.Now.AddDays(-7).Ticks
+                : timeFrame.Equals(TimeFrame.ThreeDays) ? DateTime.Now.AddDays(-3).Ticks
+                : timeFrame.Equals(TimeFrame.Day) ? DateTime.Now.AddHours(-24).Ticks
+                : 0;
+
+            // Build a collection of FolderStatisticsModels, with one element for each unique parent directory path in the database
+            folderStatisticsCollection = new ObservableCollection<FolderStatisticsModel>();
+            List<string> uniqueDirPaths = SqliteDataAccess.GetUniqueDirectoryPaths();
+            // For each unique directory path...
+            foreach (string dirPath in uniqueDirPaths)
+            {
+                // Add a new FolderStatisticsModel object to the collection
+                List<FileTimestampModel> allTimestamps = SqliteDataAccess.GetTimestampsForDirectoryInTimeFrame(dirPath, minTicks, DateTime.Now.Ticks);
+                if (allTimestamps == null || allTimestamps.Count <= 0) continue;
+                folderStatisticsCollection.Add(new FolderStatisticsModel(dirPath, allTimestamps));
+            }
+
+            // Re-order the collection based on sortMode parameter
+            switch (sortMode)
+            {
+                case SortMode.Frequent:
+                    // Order by NumViews property
+                    folderStatisticsCollection = new ObservableCollection<FolderStatisticsModel>(folderStatisticsCollection.OrderByDescending(fsm => fsm.NumViews));
+                    break;
+
+                case SortMode.Recent:
+                    // Order by last opened Ticks property
+                    folderStatisticsCollection = new ObservableCollection<FolderStatisticsModel>(folderStatisticsCollection.OrderByDescending(fsm => fsm.MostRecentTimestamp.Ticks));
+                    break;
+            }
+
+            // Set foldersListView's ItemsSource property
+            foldersListView.ItemsSource = folderStatisticsCollection;
+        }
+
+
+
     }
 }
