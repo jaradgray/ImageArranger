@@ -228,8 +228,17 @@ namespace ImageArranger
             FileStatisticsModel selectedItem = (FileStatisticsModel)filesListView.SelectedItem;
             if (selectedItem == null) return;
 
-            // TODO edit selected file's data
-            MessageBox.Show("Delete data");
+            // Prompt user to confirm deleting selected file's data
+            DialogBox dialog = new DialogBox();
+            dialog.Prompt = "Delete data for " + selectedItem.Name + "?";
+            dialog.Owner = this;
+            Nullable<bool> result = dialog.ShowDialog();
+            if (result != null && result == true)
+            {
+                // Delete selected file's data and refresh lists
+                SqliteDataAccess.DeleteDataForFile(selectedItem.AbsolutePath);
+                LoadStatistics(mTimeFrame, mSortMode);
+            }
         }
 
         /// <summary>

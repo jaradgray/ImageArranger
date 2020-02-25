@@ -123,6 +123,21 @@ namespace ImageArranger
             }
         }
 
+        /// <summary>
+        /// Deletes all records from the FileTimestep table whose FileAbsolutePath value matches @fileAbsolutePath.
+        /// </summary>
+        /// <param name="fileAbsolutePath"></param>
+        public static void DeleteDataForFile(string fileAbsolutePath)
+        {
+            // Safely open a connection to our database
+            using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                // Create a record in FileTimestamp table to represent the given timestamp
+                string sql = "DELETE FROM FileTimestamp WHERE FileAbsolutePath = '" + fileAbsolutePath + "'";
+                dbConnection.Execute(sql);
+            }
+        }
+
 
         // Private methods
 
