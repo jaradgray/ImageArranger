@@ -231,7 +231,7 @@ namespace ImageArranger
 
             // Show an EditFileDataDialog dialog to edit the selected item's data
             EditFileDataDialog dialog = new EditFileDataDialog();
-            dialog.File = selectedItem;
+            dialog.FilePath = selectedItem.AbsolutePath;
             dialog.Owner = this;
             Nullable<bool> result = dialog.ShowDialog();
         }

@@ -26,7 +26,7 @@
             Grid.Column="1"
             Grid.Row="1"
             Margin="0, 0, 0, 8"
-            Text="{Binding File.Name}" />
+            Text="{Binding FileName}" />
 
         <StackPanel
             Grid.Column="1"
@@ -39,7 +39,7 @@
 
             <TextBox x:Name="tboxPath"
                 Margin="0, 0, 8, 0"
-                Text="{Binding File.AbsolutePath, Mode=OneWay}"
+                Text="{Binding FilePath, Mode=OneWay}"
                 TextChanged="tboxPath_TextChanged"/>
 
             <Button x:Name="btnUpdatePath"

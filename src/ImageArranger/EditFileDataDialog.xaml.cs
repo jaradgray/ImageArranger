@@ -27,20 +27,29 @@ namespace ImageArranger
 
         // Properties
 
-        private FileStatisticsModel mFile;
-        public FileStatisticsModel File
+        private string mFilePath;
+        /// <summary>
+        /// The absolute path to the file whose data we're viewing.
+        /// Setting this property causes all UI to update appropriately.
+        /// </summary>
+        public string FilePath
         {
-            get { return mFile; }
+            get { return mFilePath; }
             set
             {
-                // Set mFile
-                mFile = value;
+                // Set mFilePath
+                mFilePath = value;
+
+                // Update FileName property
+                FileName = System.IO.Path.GetFileName(value);
 
                 // Populate timestamps
-                timestamps = new ObservableCollection<FileTimestampModel>(SqliteDataAccess.GetAllTimestampsForFile(mFile.AbsolutePath));
+                timestamps = new ObservableCollection<FileTimestampModel>(SqliteDataAccess.GetAllTimestampsForFile(mFilePath));
                 lbTimestamps.ItemsSource = timestamps;
             }
         }
+
+        public string FileName { get; private set; }
 
 
         // Constructor
@@ -57,12 +66,21 @@ namespace ImageArranger
 
         private void tboxPath_TextChanged(object sender, TextChangedEventArgs e)
         {
-            btnUpdatePath.Visibility = (tboxPath.Text.Equals(mFile.AbsolutePath)) ? Visibility.Hidden : Visibility.Visible;
+            btnUpdatePath.Visibility = (tboxPath.Text.Equals(mFilePath)) ? Visibility.Hidden : Visibility.Visible;
         }
 
         private void btnUpdatePath_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("TODO update path");
+            string newFilePath = tboxPath.Text;
+            string newParentDirPath = System.IO.Path.GetDirectoryName(newFilePath);
+
+            // TODO update database
+            // TODO update FilePath property
+
+            string msg = "TODO update path."
+                + "\nnewFilePath: " + newFilePath
+                + "\nnewParentDirPath: " + newParentDirPath;
+            MessageBox.Show(msg);
         }
 
         private void lbTimestamps_CmDeleteClick(object sender, RoutedEventArgs e)
