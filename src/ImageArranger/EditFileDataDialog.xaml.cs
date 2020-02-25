@@ -40,16 +40,14 @@ namespace ImageArranger
                 // Set mFilePath
                 mFilePath = value;
 
-                // Update FileName property
-                FileName = System.IO.Path.GetFileName(value);
+                // Update tbFilename's text
+                tbFilename.Text = System.IO.Path.GetFileName(value);
 
                 // Populate timestamps
                 timestamps = new ObservableCollection<FileTimestampModel>(SqliteDataAccess.GetAllTimestampsForFile(mFilePath));
                 lbTimestamps.ItemsSource = timestamps;
             }
         }
-
-        public string FileName { get; private set; }
 
 
         // Constructor
@@ -74,13 +72,18 @@ namespace ImageArranger
             string newFilePath = tboxPath.Text;
             string newParentDirPath = System.IO.Path.GetDirectoryName(newFilePath);
 
-            // TODO update database
-            // TODO update FilePath property
+            // Set properties of our cached list of timestamps to reflect the values we want to update in the database
+            foreach (FileTimestampModel timestamp in timestamps)
+            {
+                timestamp.FileAbsolutePath = newFilePath;
+                timestamp.ParentDirAbsolutePath = newParentDirPath;
+            }
 
-            string msg = "TODO update path."
-                + "\nnewFilePath: " + newFilePath
-                + "\nnewParentDirPath: " + newParentDirPath;
-            MessageBox.Show(msg);
+            // Update database
+            SqliteDataAccess.UpdateFileTimestamps(timestamps.ToList());
+
+            // Update FilePath property
+            this.FilePath = newFilePath;
         }
 
         private void lbTimestamps_CmDeleteClick(object sender, RoutedEventArgs e)

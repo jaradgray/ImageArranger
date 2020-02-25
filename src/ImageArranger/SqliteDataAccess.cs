@@ -135,6 +135,36 @@ namespace ImageArranger
         }
 
         /// <summary>
+        /// Sets values for each FileTimestamp record represented in @timestamps to match the
+        /// corresponding object's properties.
+        /// </summary>
+        /// <param name="timestamps"></param>
+        public static void UpdateFileTimestamps(List<FileTimestampModel> timestamps)
+        {
+            foreach (FileTimestampModel timestamp in timestamps)
+                UpdateFileTimestamp(timestamp);
+        }
+
+        /// <summary>
+        /// Sets values for the record in FileTimestamp table whose Id matches @timestamp.Id
+        /// to match @timestamp's properties.
+        /// </summary>
+        /// <param name="timestamp"></param>
+        public static void UpdateFileTimestamp(FileTimestampModel timestamp)
+        {
+            // Safely open a connection to our database
+            using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                // Update the record in FileTimestamp table whose Id matches @timestamp.Id with values of @timestamp's properties
+                string sql 
+                    = "UPDATE FileTimestamp "
+                    + "SET FileAbsolutePath = @FileAbsolutePath, ParentDirAbsolutePath = @ParentDirAbsolutePath, Ticks = @Ticks "
+                    + "WHERE Id = @Id";
+                dbConnection.Execute(sql, timestamp);
+            }
+        }
+
+        /// <summary>
         /// Deletes all records from the FileTimestep table whose FileAbsolutePath value matches @fileAbsolutePath.
         /// </summary>
         /// <param name="fileAbsolutePath"></param>

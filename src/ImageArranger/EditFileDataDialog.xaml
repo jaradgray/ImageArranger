@@ -22,11 +22,11 @@
             <RowDefinition Height="16" />
         </Grid.RowDefinitions>
 
-        <TextBlock
+        <TextBlock x:Name="tbFilename"
             Grid.Column="1"
             Grid.Row="1"
             Margin="0, 0, 0, 8"
-            Text="{Binding FileName}" />
+            Text="tbFilename" />
 
         <StackPanel
             Grid.Column="1"
