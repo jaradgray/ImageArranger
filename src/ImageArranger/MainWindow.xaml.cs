@@ -162,7 +162,9 @@ namespace ImageArranger
         private void StatisticsCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             // Show Statistics window
-            new StatisticsWindow().Show();
+            StatisticsWindow statisticsWindow = new StatisticsWindow();
+            statisticsWindow.Owner = this;
+            statisticsWindow.Show();
         }
 
 
