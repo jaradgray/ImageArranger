@@ -25,7 +25,8 @@
         <TextBlock
             Grid.Column="1"
             Grid.Row="1"
-            Text="Filename" />
+            Margin="0, 0, 0, 8"
+            Text="{Binding File.Name}" />
 
         <StackPanel
             Grid.Column="1"
@@ -37,58 +38,54 @@
                 Text="File path:" />
 
             <TextBox x:Name="tboxPath"
-                Text="blah" />
+                Margin="0, 0, 8, 0"
+                Text="{Binding File.AbsolutePath, Mode=OneWay}"
+                TextChanged="tboxPath_TextChanged"/>
+
+            <Button x:Name="btnUpdatePath"
+                Content="Save"
+                Click="btnUpdatePath_Click"
+                Visibility="Hidden" />
 
         </StackPanel>
 
         <TextBlock
             Grid.Column="1"
             Grid.Row="3"
+            Margin="0, 8, 0, 8"
             Text="Timestamps:" />
 
-        <ListBox
+        <ListBox x:Name="lbTimestamps"
             Grid.Column="1"
-            Grid.Row="4">
-            
+            Grid.Row="4"
+            SelectionMode="Single">
+
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Delete"
+                        Click="lbTimestamps_CmDeleteClick" />
+                </ContextMenu>
+            </ListBox.ContextMenu>
+
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
 
-                        <TextBlock
-                            Grid.Column="0"
-                            Text="Timestamp" />
-
-                        <Button
-                            Grid.Column="1"
-                            Content="X" />
+                    <TextBlock
+                        Margin="0, 0, 8, 0"
+                        Text="{Binding TicksAsDateTime}" />
                         
-                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <StackPanel
+        <Button
             Grid.Column="1"
             Grid.Row="5"
-            Orientation="Horizontal"
-            HorizontalAlignment="Right">
-
-            <Button
-                Margin="0, 0, 8, 0"
-                Padding="8, 0"
-                Content="Save"
-                Click="btnSave_Click"/>
-
-            <Button
-                Padding="8, 0"
-                Content="Cancel"
-                Click="btnCancel_Click"/>
-
-        </StackPanel>
+            Margin="0, 8, 0, 0"
+            Padding="8, 0"
+            HorizontalAlignment="Right"
+            Content="Close"
+            Click="btnClose_Click" />
 
     </Grid>
 </Window>

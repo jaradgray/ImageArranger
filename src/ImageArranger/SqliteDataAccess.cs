@@ -67,6 +67,17 @@ namespace ImageArranger
         }
 
         /// <summary>
+        /// Returns a List of all FileTimestampModel records in FileTimestamp table whose FileAbsolutePath value
+        /// is @fileAbsolutePath.
+        /// </summary>
+        /// <param name="fileAbsolutePath"></param>
+        /// <returns></returns>
+        public static List<FileTimestampModel> GetAllTimestampsForFile(string fileAbsolutePath)
+        {
+            return GetTimestampsForFileInTimeFrame(fileAbsolutePath, 0, long.MaxValue);
+        }
+
+        /// <summary>
         /// Returns a List of FileTimestampModel records in the database whose FileAbsolutePath property
         /// matches the given string and whose Ticks property is between @minTicks and @maxTicks (both inclusive),
         /// ordered by Ticks descending.

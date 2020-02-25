@@ -18,6 +18,8 @@ namespace ImageArranger
         public string ParentDirAbsolutePath { get; set; }
         public long Ticks { get; set; }
 
+        public DateTime TicksAsDateTime { get { return new DateTime(Ticks); } }
+
 
         // Constructors
 
