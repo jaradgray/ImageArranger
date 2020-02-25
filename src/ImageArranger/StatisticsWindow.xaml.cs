@@ -67,6 +67,13 @@ namespace ImageArranger
         {
             InitializeComponent();
 
+            // Listen for database changes from MainWindow
+            MainWindow mainWindow = Application.Current.MainWindow as MainWindow; // 'as' operator attempts to cast an object to a specific type, and returns null if it fails
+            if (mainWindow != null)
+            {
+                mainWindow.DatabaseChanged += MainWindow_DatabaseChanged;
+            }
+
             // TODO delete the following section
             // Populate database with dummy data to test timeframe filtering
             // Testing filtering files by time frame
@@ -238,12 +245,23 @@ namespace ImageArranger
         }
 
         /// <summary>
-        /// 
+        /// Reloads data for UI from database.
         /// Called when an EditFileDataDialog instance updates the database.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EditFileDataDialog_DatabaseChanged(object sender, EventArgs e)
+        {
+            LoadStatistics(mTimeFrame, mSortMode);
+        }
+
+        /// <summary>
+        /// Reloads data for UI from database.
+        /// Called when MainWindow updates the database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainWindow_DatabaseChanged(object sender, EventArgs e)
         {
             LoadStatistics(mTimeFrame, mSortMode);
         }

@@ -40,6 +40,15 @@ namespace ImageArranger
         private string _arrangementPath = "";
         private bool _hasUnsavedChanges = false;
 
+        /// <summary>
+        /// The event that notifies subscribers that the database has changed.
+        /// </summary>
+        public event EventHandler DatabaseChanged;
+        private void OnDatabaseChanged()
+        {
+            if (DatabaseChanged != null) DatabaseChanged(this, EventArgs.Empty);
+        }
+
 
         // Constructor
         public MainWindow()
@@ -215,6 +224,9 @@ namespace ImageArranger
                             DateTime now = DateTime.Now;
                             FileTimestampModel timestamp = new FileTimestampModel(s, now.Ticks);
                             SqliteDataAccess.SaveFileTimestamp(timestamp);
+
+                            // Notify listeners that the database has changed
+                            OnDatabaseChanged();
 
                             filenames.Add(s);
                             fileAdded = true;
