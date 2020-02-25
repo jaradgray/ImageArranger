@@ -214,6 +214,24 @@ namespace ImageArranger
             LoadStatistics(mTimeFrame, mSortMode);
         }
 
+        private void filesListViewCM_EditData_Click(object sender, RoutedEventArgs e)
+        {
+            FileStatisticsModel selectedItem = (FileStatisticsModel)filesListView.SelectedItem;
+            if (selectedItem == null) return;
+
+            // TODO edit selected file's data
+            MessageBox.Show("Edit data");
+        }
+
+        private void filesListViewCM_DeleteData_Click(object sender, RoutedEventArgs e)
+        {
+            FileStatisticsModel selectedItem = (FileStatisticsModel)filesListView.SelectedItem;
+            if (selectedItem == null) return;
+
+            // TODO edit selected file's data
+            MessageBox.Show("Delete data");
+        }
+
         /// <summary>
         /// Starts a File Explorer process and navigates to filesListView's selected item's file.
         /// </summary>
@@ -229,6 +247,38 @@ namespace ImageArranger
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 Arguments = "/select, " + selectedItem.AbsolutePath /* command-line arguments */,
+                FileName = "explorer.exe"
+            };
+            Process.Start(startInfo);
+        }
+
+        private void foldersListViewCM_DeleteData_Click(object sender, RoutedEventArgs e)
+        {
+            FolderStatisticsModel selectedItem = (FolderStatisticsModel)foldersListView.SelectedItem;
+            if (selectedItem == null) return;
+
+            // TODO delete selected folder(s)'s data
+            MessageBox.Show("Delete data");
+        }
+
+        /// <summary>
+        /// Starts a File Explorer process and navigates to foldersListView's selected item's folder.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void foldersListViewCM_RevealInExplorer_Click(object sender, RoutedEventArgs e)
+        {
+            // Can't browse to less than or more than one folder
+            if (foldersListView.SelectedItems == null || foldersListView.SelectedItems.Count > 1) return;
+
+            FolderStatisticsModel selectedItem = (FolderStatisticsModel)foldersListView.SelectedItem;
+            if (selectedItem == null) return;
+            if (!Directory.Exists(selectedItem.AbsolutePath)) return;
+
+            // Launch File Explorer and select the file corresponding to selectedItem
+            ProcessStartInfo startInfo = new ProcessStartInfo
+            {
+                Arguments = selectedItem.AbsolutePath /* command-line arguments */,
                 FileName = "explorer.exe"
             };
             Process.Start(startInfo);
