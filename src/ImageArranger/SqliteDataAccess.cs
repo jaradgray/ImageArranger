@@ -132,8 +132,32 @@ namespace ImageArranger
             // Safely open a connection to our database
             using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))
             {
-                // Create a record in FileTimestamp table to represent the given timestamp
+                // Delete all records from FileTimestamp table whose FileAbsolutePath value matches the parameter
                 string sql = "DELETE FROM FileTimestamp WHERE FileAbsolutePath = '" + fileAbsolutePath + "'";
+                dbConnection.Execute(sql);
+            }
+        }
+
+        /// <summary>
+        /// Deletes all records from the FileTimestep table whose ParentDirAbsolutePath value is contained in @parentDirAbsolutePaths.
+        /// </summary>
+        /// <param name="parentDirAbsolutePaths"></param>
+        public static void DeleteDataForFolders(List<FolderStatisticsModel> folders)
+        {
+            // Safely open a connection to our database
+            using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                // Build the string of folder paths we can use in the SQL statement
+                string sqlList = "(";
+                int index = 0;
+                while (index < folders.Count)
+                {
+                    sqlList += "'" + folders[index].AbsolutePath + "'";
+                    sqlList += (++index < folders.Count) ? ", " : ")";
+                }
+
+                // Delete all records from FileTimestamp table whose ParentAbsolutePath value is in sqlList
+                string sql = "DELETE FROM FileTimestamp WHERE ParentDirAbsolutePath IN " + sqlList;
                 dbConnection.Execute(sql);
             }
         }
