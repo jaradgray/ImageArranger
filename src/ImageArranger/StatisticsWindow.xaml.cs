@@ -154,7 +154,13 @@ namespace ImageArranger
 
         private void FoldersListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            // TODO filter displayed files based on selected folder item/s
+            int numSelected = foldersListView.SelectedItems.Count;
+            if (numSelected > 0)
+            {
+                List<FolderStatisticsModel> folders = foldersListView.SelectedItems.Cast<FolderStatisticsModel>().ToList();
+                LoadFileStatistics(mTimeFrame, mSortMode, folders);
+            }
         }
 
         private void CmbTimeFrame_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -228,44 +234,7 @@ namespace ImageArranger
 
             // Get min and max Ticks for the given TimeFrame
             long now = DateTime.Now.Ticks;
-            long minTicks;
-            switch (timeFrame)
-            {
-                case TimeFrame.Day:
-                    minTicks = DateTime.Now.AddHours(-24).Ticks;
-                    break;
-
-                case TimeFrame.ThreeDays:
-                    minTicks = DateTime.Now.AddDays(-3).Ticks;
-                    break;
-
-                case TimeFrame.Week:
-                    minTicks = DateTime.Now.AddDays(-7).Ticks;
-                    break;
-
-                case TimeFrame.Month:
-                    minTicks = DateTime.Now.AddMonths(-1).Ticks;
-                    break;
-
-                case TimeFrame.Year:
-                    minTicks = DateTime.Now.AddYears(-1).Ticks;
-                    break;
-
-                // TODO delete the following 3 cases
-                case TimeFrame.ThirtySeconds:
-                    minTicks = DateTime.Now.AddSeconds(-30).Ticks;
-                    break;
-                case TimeFrame.Minute:
-                    minTicks = DateTime.Now.AddMinutes(-1).Ticks;
-                    break;
-                case TimeFrame.ThreeMinutes:
-                    minTicks = DateTime.Now.AddMinutes(-3).Ticks;
-                    break;
-
-                default:
-                    minTicks = 0;
-                    break;
-            }
+            long minTicks = GetMinTicksForTimeFrame(timeFrame);
 
             // Build a collection of FileStatisticsModels, with one element for each unique file represented in the database
             fileStatisticsCollection = new ObservableCollection<FileStatisticsModel>();
@@ -273,6 +242,52 @@ namespace ImageArranger
             foreach (string filePath in uniqueFilePaths)
             {
                 List<FileTimestampModel> allTimestamps = SqliteDataAccess.GetTimestampsForFileInTimeFrame(filePath, minTicks, now);
+                if (allTimestamps == null || allTimestamps.Count <= 0) continue;
+                fileStatisticsCollection.Add(new FileStatisticsModel(filePath, allTimestamps));
+            }
+
+            // Re-order the collection based on sortMode parameter
+            switch (sortMode)
+            {
+                case SortMode.Frequent:
+                    // Order by NumViews property
+                    fileStatisticsCollection = new ObservableCollection<FileStatisticsModel>(fileStatisticsCollection.OrderByDescending(fsm => fsm.NumViews));
+                    break;
+
+                case SortMode.Recent:
+                    // Order by last opened Ticks property
+                    fileStatisticsCollection = new ObservableCollection<FileStatisticsModel>(fileStatisticsCollection.OrderByDescending(fsm => fsm.TimestampLastOpened.Ticks));
+                    break;
+            }
+
+            // Set filesListView's ItemsSource property
+            filesListView.ItemsSource = fileStatisticsCollection;
+        }
+
+        /// <summary>
+        /// Populates fileStatisticsCollection with elements representing each unique file any folder in @folders
+        /// within @timeFrame, order the collection according to @sortMode, and display the list in filesListView.
+        /// </summary>
+        /// <param name="timeFrame"></param>
+        /// <param name="sortMode"></param>
+        /// <param name="folders"></param>
+        private void LoadFileStatistics(TimeFrame timeFrame, SortMode sortMode, List<FolderStatisticsModel> folders)
+        {
+            if (filesListView == null) return;
+
+            // Get min Ticks for the given TimeFrame
+            long minTicks = GetMinTicksForTimeFrame(timeFrame);
+            
+            // Build the list of unique file paths in the given folders
+            List<string> uniqueFilePaths = new List<string>();
+            foreach (FolderStatisticsModel folder in folders)
+                uniqueFilePaths.AddRange(SqliteDataAccess.GetUniqueFilePathsInDirectory(folder));
+
+            // Populate collection with elements representing each unique file path
+            fileStatisticsCollection = new ObservableCollection<FileStatisticsModel>();
+            foreach (string filePath in uniqueFilePaths)
+            {
+                List<FileTimestampModel> allTimestamps = SqliteDataAccess.GetTimestampsForFileInTimeFrame(filePath, minTicks, DateTime.Now.Ticks);
                 if (allTimestamps == null || allTimestamps.Count <= 0) continue;
                 fileStatisticsCollection.Add(new FileStatisticsModel(filePath, allTimestamps));
             }
@@ -306,12 +321,7 @@ namespace ImageArranger
             if (foldersListView == null) return;
 
             // Get min Ticks for the given TimeFrame
-            long minTicks = timeFrame.Equals(TimeFrame.Year) ? DateTime.Now.AddYears(-1).Ticks
-                : timeFrame.Equals(TimeFrame.Month) ? DateTime.Now.AddMonths(-1).Ticks
-                : timeFrame.Equals(TimeFrame.Week) ? DateTime.Now.AddDays(-7).Ticks
-                : timeFrame.Equals(TimeFrame.ThreeDays) ? DateTime.Now.AddDays(-3).Ticks
-                : timeFrame.Equals(TimeFrame.Day) ? DateTime.Now.AddHours(-24).Ticks
-                : 0;
+            long minTicks = GetMinTicksForTimeFrame(timeFrame);
 
             // Build a collection of FolderStatisticsModels, with one element for each unique parent directory path in the database
             folderStatisticsCollection = new ObservableCollection<FolderStatisticsModel>();
@@ -341,6 +351,22 @@ namespace ImageArranger
 
             // Set foldersListView's ItemsSource property
             foldersListView.ItemsSource = folderStatisticsCollection;
+        }
+
+        /// <summary>
+        /// Returns the minimum value of DateTime.Ticks corresponding to @timeFrame.
+        /// </summary>
+        /// <param name="timeFrame"></param>
+        /// <returns></returns>
+        private long GetMinTicksForTimeFrame(TimeFrame timeFrame)
+        {
+            long result = timeFrame.Equals(TimeFrame.Year) ? DateTime.Now.AddYears(-1).Ticks
+                : timeFrame.Equals(TimeFrame.Month) ? DateTime.Now.AddMonths(-1).Ticks
+                : timeFrame.Equals(TimeFrame.Week) ? DateTime.Now.AddDays(-7).Ticks
+                : timeFrame.Equals(TimeFrame.ThreeDays) ? DateTime.Now.AddDays(-3).Ticks
+                : timeFrame.Equals(TimeFrame.Day) ? DateTime.Now.AddHours(-24).Ticks
+                : 0;
+            return result;
         }
 
 

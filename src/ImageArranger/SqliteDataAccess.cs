@@ -31,6 +31,25 @@ namespace ImageArranger
         }
 
         /// <summary>
+        /// Returns a List containing each unique FileAbsolutePath value for records in the database whose
+        /// ParentDirAbsolutePath value matches @directory's AbsolutePath property.
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <returns></returns>
+        public static List<string> GetUniqueFilePathsInDirectory(FolderStatisticsModel directory)
+        {
+            // Safely open a connection to our database
+            using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                // Query the database
+                string query = "SELECT DISTINCT FileAbsolutePath FROM FileTimestamp WHERE ParentDirAbsolutePath = '" + directory.AbsolutePath + "'";
+                var output = dbConnection.Query<string>(query, new DynamicParameters());
+                // Convert output to a List and return it
+                return new List<string>(output);
+            }
+        }
+
+        /// <summary>
         /// Returns a List containing each unique ParentDirAbsolutePath value stored in the database
         /// </summary>
         /// <returns></returns>
