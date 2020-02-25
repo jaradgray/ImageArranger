@@ -86,31 +86,31 @@ namespace ImageArranger
             long jan1 = new DateTime(2020, 1, 1).Ticks;
             long jul7 = new DateTime(2019, 7, 7).Ticks;
             long longAgo = new DateTime(1920, 7, 7).Ticks;
-            FileTimestampModel timestamp0 = new FileTimestampModel("A:\\Grandparent\\Parent\\jul7.jpg", oneSecAgo);
-            FileTimestampModel timestamp1 = new FileTimestampModel("A:\\Grandparent\\Parent\\today.jpg", today);
-            FileTimestampModel timestamp2 = new FileTimestampModel("A:\\Grandparent\\Parent\\yesterday.jpg", yesterday);
-            FileTimestampModel timestamp3 = new FileTimestampModel("A:\\Grandparent\\Parent\\thursday.jpg", thursday);
-            FileTimestampModel timestamp4 = new FileTimestampModel("A:\\Grandparent\\Parent\\feb1.jpg", feb1);
-            FileTimestampModel timestamp5 = new FileTimestampModel("A:\\Grandparent\\Parent\\jan1.jpg", jan1);
-            FileTimestampModel timestamp6 = new FileTimestampModel("A:\\Grandparent\\Parent\\jul7.jpg", jul7);
-            FileTimestampModel timestamp7 = new FileTimestampModel("A:\\Grandparent\\Parent\\jul7.jpg", longAgo);
+            //FileTimestampModel timestamp0 = new FileTimestampModel("A:\\Grandparent\\Parent\\jul7.jpg", oneSecAgo);
+            //FileTimestampModel timestamp1 = new FileTimestampModel("A:\\Grandparent\\Parent\\today.jpg", today);
+            //FileTimestampModel timestamp2 = new FileTimestampModel("A:\\Grandparent\\Parent\\yesterday.jpg", yesterday);
+            //FileTimestampModel timestamp3 = new FileTimestampModel("A:\\Grandparent\\Parent\\thursday.jpg", thursday);
+            //FileTimestampModel timestamp4 = new FileTimestampModel("A:\\Grandparent\\Parent\\feb1.jpg", feb1);
+            //FileTimestampModel timestamp5 = new FileTimestampModel("A:\\Grandparent\\Parent\\jan1.jpg", jan1);
+            //FileTimestampModel timestamp6 = new FileTimestampModel("A:\\Grandparent\\Parent\\jul7.jpg", jul7);
+            //FileTimestampModel timestamp7 = new FileTimestampModel("A:\\Grandparent\\Parent\\jul7.jpg", longAgo);
 
-            FileTimestampModel timestamp8 = new FileTimestampModel("B:\\Grandparent\\Other Folder\\hello.jpg", oneSecAgo - 1);
-            FileTimestampModel timestamp9 = new FileTimestampModel("B:\\Grandparent\\Other Folder\\hello2.jpg", today - 1);
-            FileTimestampModel timestamp10 = new FileTimestampModel("B:\\Grandparent\\Other Folder\\hello3.jpg", yesterday - 1);
-            FileTimestampModel timestamp11 = new FileTimestampModel("B:\\Grandparent\\Other Folder\\thursday.jpg", thursday - 1);
-            SqliteDataAccess.SaveFileTimestamp(timestamp0);
-            SqliteDataAccess.SaveFileTimestamp(timestamp1);
-            SqliteDataAccess.SaveFileTimestamp(timestamp2);
-            SqliteDataAccess.SaveFileTimestamp(timestamp3);
-            SqliteDataAccess.SaveFileTimestamp(timestamp4);
-            SqliteDataAccess.SaveFileTimestamp(timestamp5);
-            SqliteDataAccess.SaveFileTimestamp(timestamp6);
-            SqliteDataAccess.SaveFileTimestamp(timestamp7);
-            SqliteDataAccess.SaveFileTimestamp(timestamp8);
-            SqliteDataAccess.SaveFileTimestamp(timestamp9);
-            SqliteDataAccess.SaveFileTimestamp(timestamp10);
-            SqliteDataAccess.SaveFileTimestamp(timestamp11);
+            //FileTimestampModel timestamp8 = new FileTimestampModel("B:\\Grandparent\\Other Folder\\hello.jpg", oneSecAgo - 1);
+            //FileTimestampModel timestamp9 = new FileTimestampModel("B:\\Grandparent\\Other Folder\\hello2.jpg", today - 1);
+            //FileTimestampModel timestamp10 = new FileTimestampModel("B:\\Grandparent\\Other Folder\\hello3.jpg", yesterday - 1);
+            //FileTimestampModel timestamp11 = new FileTimestampModel("B:\\Grandparent\\Other Folder\\thursday.jpg", thursday - 1);
+            //SqliteDataAccess.SaveFileTimestamp(timestamp0);
+            //SqliteDataAccess.SaveFileTimestamp(timestamp1);
+            //SqliteDataAccess.SaveFileTimestamp(timestamp2);
+            //SqliteDataAccess.SaveFileTimestamp(timestamp3);
+            //SqliteDataAccess.SaveFileTimestamp(timestamp4);
+            //SqliteDataAccess.SaveFileTimestamp(timestamp5);
+            //SqliteDataAccess.SaveFileTimestamp(timestamp6);
+            //SqliteDataAccess.SaveFileTimestamp(timestamp7);
+            //SqliteDataAccess.SaveFileTimestamp(timestamp8);
+            //SqliteDataAccess.SaveFileTimestamp(timestamp9);
+            //SqliteDataAccess.SaveFileTimestamp(timestamp10);
+            //SqliteDataAccess.SaveFileTimestamp(timestamp11);
 
             LoadStatistics(mTimeFrame, mSortMode);
         }
@@ -320,6 +320,17 @@ namespace ImageArranger
                 FileName = "explorer.exe"
             };
             Process.Start(startInfo);
+        }
+
+        /// <summary>
+        /// Clears foldersListView's selection, and reloads files to display all files in the database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void foldersListViewCM_ClearSelection_Click(object sender, RoutedEventArgs e)
+        {
+            foldersListView.SelectedItem = null;
+            LoadFileStatistics(mTimeFrame, mSortMode);
         }
 
         /// <summary>

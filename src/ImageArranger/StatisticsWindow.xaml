@@ -84,6 +84,8 @@
 
                     <ListView.ContextMenu>
                         <ContextMenu>
+                            <MenuItem Header="Clear Selection"
+                            Click="foldersListViewCM_ClearSelection_Click" />
                             <MenuItem Header="Delete Data"
                             Click="foldersListViewCM_DeleteData_Click" />
                             <MenuItem Header="Reveal in Explorer..."
