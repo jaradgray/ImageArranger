@@ -232,8 +232,20 @@ namespace ImageArranger
             // Show an EditFileDataDialog dialog to edit the selected item's data
             EditFileDataDialog dialog = new EditFileDataDialog();
             dialog.FilePath = selectedItem.AbsolutePath;
+            dialog.DatabaseChanged += EditFileDataDialog_DatabaseChanged;
             dialog.Owner = this;
             Nullable<bool> result = dialog.ShowDialog();
+        }
+
+        /// <summary>
+        /// 
+        /// Called when an EditFileDataDialog instance updates the database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EditFileDataDialog_DatabaseChanged(object sender, EventArgs e)
+        {
+            LoadStatistics(mTimeFrame, mSortMode);
         }
 
         /// <summary>

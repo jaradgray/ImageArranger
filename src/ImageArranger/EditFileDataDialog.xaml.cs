@@ -24,6 +24,15 @@ namespace ImageArranger
 
         public ObservableCollection<FileTimestampModel> timestamps = new ObservableCollection<FileTimestampModel>();
 
+        /// <summary>
+        /// The event that notifies subscribers that the database has changed.
+        /// </summary>
+        public event EventHandler DatabaseChanged;
+        public void OnDatabaseChanged()
+        {
+            if (DatabaseChanged != null) DatabaseChanged(this, EventArgs.Empty);
+        }
+
 
         // Properties
 
@@ -69,6 +78,9 @@ namespace ImageArranger
 
         private void btnUpdatePath_Click(object sender, RoutedEventArgs e)
         {
+            // Hide button
+            btnUpdatePath.Visibility = Visibility.Hidden;
+
             string newFilePath = tboxPath.Text;
             string newParentDirPath = System.IO.Path.GetDirectoryName(newFilePath);
 
@@ -84,6 +96,9 @@ namespace ImageArranger
 
             // Update FilePath property
             this.FilePath = newFilePath;
+
+            // Notify listeners that the database has changed
+            OnDatabaseChanged();
         }
 
         private void lbTimestamps_CmDeleteClick(object sender, RoutedEventArgs e)
@@ -98,6 +113,9 @@ namespace ImageArranger
             // Refresh list of timestamps
             timestamps = new ObservableCollection<FileTimestampModel>(SqliteDataAccess.GetAllTimestampsForFile(mFilePath));
             lbTimestamps.ItemsSource = timestamps;
+
+            // Notify listeners that the database has changed
+            OnDatabaseChanged();
 
             // Close this window if we deleted the last timestamp
             if (timestamps.Count == 0)
