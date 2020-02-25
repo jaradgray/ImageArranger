@@ -118,6 +118,18 @@ namespace ImageArranger
 
         // Event handlers
 
+        private void MiRevealDatabaseInExplorer_Click(object sender, RoutedEventArgs e)
+        {
+            string dbRelativePath = ".\\Statistics.db";
+            // Launch File Explorer and select the database file
+            ProcessStartInfo startInfo = new ProcessStartInfo
+            {
+                Arguments = "/select, " + dbRelativePath /* command-line arguments */,
+                FileName = "explorer.exe"
+            };
+            Process.Start(startInfo);
+        }
+
         private void CmbSortMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Set mSortMode based on currently selected index
