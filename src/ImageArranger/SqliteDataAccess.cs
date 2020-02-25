@@ -165,6 +165,21 @@ namespace ImageArranger
         }
 
         /// <summary>
+        /// Deletes the FileTimestamp record whose Id value matches @timestamp's Id property.
+        /// </summary>
+        /// <param name="timestamp"></param>
+        public static void DeleteFileTimestamp(FileTimestampModel timestamp)
+        {
+            // Safely open a connection to our database
+            using (IDbConnection dbConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                // Delete the FileTimestamp record whose Id value matches @timestamp's Id property
+                string sql = "DELETE FROM FileTimestamp WHERE Id = @Id";
+                dbConnection.Execute(sql, timestamp);
+            }
+        }
+
+        /// <summary>
         /// Deletes all records from the FileTimestep table whose FileAbsolutePath value matches @fileAbsolutePath.
         /// </summary>
         /// <param name="fileAbsolutePath"></param>

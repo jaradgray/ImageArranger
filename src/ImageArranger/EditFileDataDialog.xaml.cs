@@ -92,13 +92,16 @@ namespace ImageArranger
 
             FileTimestampModel selectedTimestamp = (FileTimestampModel) lbTimestamps.SelectedItems[0];
 
-            // TODO delete the selected timestamp from the database
-            MessageBox.Show("Delete timestamp " + selectedTimestamp.Id + " for file:\n" + selectedTimestamp.FileAbsolutePath);
-        }
+            // Delete the selected timestamp from the database
+            SqliteDataAccess.DeleteFileTimestamp(selectedTimestamp);
 
-        public void btnDeleteTimestamp_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Delete timestamp, sender:\n" + sender);
+            // Refresh list of timestamps
+            timestamps = new ObservableCollection<FileTimestampModel>(SqliteDataAccess.GetAllTimestampsForFile(mFilePath));
+            lbTimestamps.ItemsSource = timestamps;
+
+            // Close this window if we deleted the last timestamp
+            if (timestamps.Count == 0)
+                this.DialogResult = false;
         }
 
         public void btnClose_Click(object sender, RoutedEventArgs e)
