@@ -23,5 +23,18 @@ namespace ImageArranger
         {
             InitializeComponent();
         }
+
+
+        // Event handlers
+
+        public void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+        }
+
+        public void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
+        }
     }
 }

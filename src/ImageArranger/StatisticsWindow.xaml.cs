@@ -73,7 +73,7 @@ namespace ImageArranger
             long oneSecAgo = DateTime.Now.AddSeconds(-1).Ticks;
             long today = new DateTime(2020, 2, 24).Ticks;
             long yesterday = new DateTime(2020, 2, 23).Ticks;
-            long thrusday = new DateTime(2020, 2, 20).Ticks;
+            long thursday = new DateTime(2020, 2, 20).Ticks;
             long feb1 = new DateTime(2020, 2, 1).Ticks;
             long jan1 = new DateTime(2020, 1, 1).Ticks;
             long jul7 = new DateTime(2019, 7, 7).Ticks;
@@ -81,11 +81,16 @@ namespace ImageArranger
             FileTimestampModel timestamp0 = new FileTimestampModel("A:\\Grandparent\\Parent\\jul7.jpg", oneSecAgo);
             FileTimestampModel timestamp1 = new FileTimestampModel("A:\\Grandparent\\Parent\\today.jpg", today);
             FileTimestampModel timestamp2 = new FileTimestampModel("A:\\Grandparent\\Parent\\yesterday.jpg", yesterday);
-            FileTimestampModel timestamp3 = new FileTimestampModel("A:\\Grandparent\\Parent\\thursday.jpg", thrusday);
+            FileTimestampModel timestamp3 = new FileTimestampModel("A:\\Grandparent\\Parent\\thursday.jpg", thursday);
             FileTimestampModel timestamp4 = new FileTimestampModel("A:\\Grandparent\\Parent\\feb1.jpg", feb1);
             FileTimestampModel timestamp5 = new FileTimestampModel("A:\\Grandparent\\Parent\\jan1.jpg", jan1);
             FileTimestampModel timestamp6 = new FileTimestampModel("A:\\Grandparent\\Parent\\jul7.jpg", jul7);
             FileTimestampModel timestamp7 = new FileTimestampModel("A:\\Grandparent\\Parent\\jul7.jpg", longAgo);
+
+            FileTimestampModel timestamp8 = new FileTimestampModel("B:\\Grandparent\\Other Folder\\hello.jpg", oneSecAgo - 1);
+            FileTimestampModel timestamp9 = new FileTimestampModel("B:\\Grandparent\\Other Folder\\hello2.jpg", today - 1);
+            FileTimestampModel timestamp10 = new FileTimestampModel("B:\\Grandparent\\Other Folder\\hello3.jpg", yesterday - 1);
+            FileTimestampModel timestamp11 = new FileTimestampModel("B:\\Grandparent\\Other Folder\\thursday.jpg", thursday - 1);
             SqliteDataAccess.SaveFileTimestamp(timestamp0);
             SqliteDataAccess.SaveFileTimestamp(timestamp1);
             SqliteDataAccess.SaveFileTimestamp(timestamp2);
@@ -94,6 +99,10 @@ namespace ImageArranger
             SqliteDataAccess.SaveFileTimestamp(timestamp5);
             SqliteDataAccess.SaveFileTimestamp(timestamp6);
             SqliteDataAccess.SaveFileTimestamp(timestamp7);
+            SqliteDataAccess.SaveFileTimestamp(timestamp8);
+            SqliteDataAccess.SaveFileTimestamp(timestamp9);
+            SqliteDataAccess.SaveFileTimestamp(timestamp10);
+            SqliteDataAccess.SaveFileTimestamp(timestamp11);
 
             LoadStatistics(mTimeFrame, mSortMode);
         }
@@ -220,7 +229,17 @@ namespace ImageArranger
             if (selectedItem == null) return;
 
             // TODO edit selected file's data
-            MessageBox.Show("Edit data");
+            EditFileDataDialog dialog = new EditFileDataDialog();
+            dialog.Owner = this;
+            Nullable<bool> result = dialog.ShowDialog();
+            if (result != null && result == true)
+            {
+                MessageBox.Show("Save changes");
+            }
+            else
+            {
+                MessageBox.Show("Don't save changes");
+            }
         }
 
         /// <summary>

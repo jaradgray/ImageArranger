@@ -67,6 +67,9 @@
     <Compile Include="DialogBox.xaml.cs">
       <DependentUpon>DialogBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EditFileDataDialog.xaml.cs">
+      <DependentUpon>EditFileDataDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FileStatisticsModel.cs" />
     <Compile Include="FileTimestampModel.cs" />
     <Compile Include="FolderStatisticsModel.cs" />
@@ -75,6 +78,10 @@
       <DependentUpon>StatisticsWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="DialogBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditFileDataDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
