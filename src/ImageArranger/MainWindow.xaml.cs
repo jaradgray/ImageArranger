@@ -211,26 +211,30 @@ namespace ImageArranger
                     }
                 }
                 // Handle non-Arrangement file dropped
+                bool databaseUpdated = false;
                 foreach (string s in droppedFilenames)
                 {
                     if (validImageExtensions.Contains(System.IO.Path.GetExtension(s).ToUpperInvariant()))
                     {
+                        // Add a FileTimestamp record to the database
+                        DateTime now = DateTime.Now;
+                        FileTimestampModel timestamp = new FileTimestampModel(s, now.Ticks);
+                        SqliteDataAccess.SaveFileTimestamp(timestamp);
+                        databaseUpdated = true;
+
                         // add s to filenames if it's not already there
                         if (!filenames.Contains(s))
                         {
-                            // Add a FileTimestamp record to the database
-                            DateTime now = DateTime.Now;
-                            FileTimestampModel timestamp = new FileTimestampModel(s, now.Ticks);
-                            SqliteDataAccess.SaveFileTimestamp(timestamp);
-
-                            // Notify listeners that the database has changed
-                            OnDatabaseChanged();
-
                             filenames.Add(s);
                             fileAdded = true;
                         }
                     }
                 }//end foreach
+                if (databaseUpdated)
+                {
+                    // Notify listeners that the database has changed
+                    OnDatabaseChanged();
+                }
                 if (fileAdded)
                 {
                     IndicateUnsavedChanges(true);
