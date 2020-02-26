@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace ImageArranger
 {
@@ -55,6 +56,11 @@ namespace ImageArranger
                 // Populate timestamps
                 timestamps = new ObservableCollection<FileTimestampModel>(SqliteDataAccess.GetAllTimestampsForFile(mFilePath));
                 lbTimestamps.ItemsSource = timestamps;
+
+                // Indicate whether mFilePath is a real file path
+                bool fileExists = System.IO.File.Exists(mFilePath);
+                btnLocateFile.Visibility = (fileExists) ? Visibility.Collapsed : Visibility.Visible;
+                tbPath.Foreground = (fileExists) ? Brushes.Black : Brushes.Red;
             }
         }
 
@@ -71,38 +77,43 @@ namespace ImageArranger
 
         // Event handlers
 
-        private void tboxPath_TextChanged(object sender, TextChangedEventArgs e)
+        /// <summary>
+        /// Shows an OpenFileDialog and updates database records and this EditFileDataDialog's FilePath property
+        /// to be based on the browsed-to file's path.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnLocateFile_Click(object sender, RoutedEventArgs e)
         {
-            string text = tboxPath.Text;
-            btnUpdatePath.Visibility = (text.Equals(mFilePath)) ? Visibility.Collapsed : Visibility.Visible;
-
-            // Indicate whether tboxPath's text is a real file path
-            tbFileNotFound.Visibility = (System.IO.File.Exists(text)) ? Visibility.Collapsed : Visibility.Visible;
-        }
-
-        private void btnUpdatePath_Click(object sender, RoutedEventArgs e)
-        {
-            // Hide button
-            btnUpdatePath.Visibility = Visibility.Hidden;
-
-            string newFilePath = tboxPath.Text;
-            string newParentDirPath = System.IO.Path.GetDirectoryName(newFilePath);
-
-            // Set properties of our cached list of timestamps to reflect the values we want to update in the database
-            foreach (FileTimestampModel timestamp in timestamps)
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Multiselect = false;
+            ofd.InitialDirectory = System.IO.Path.GetDirectoryName(tbPath.Text);
+            ofd.Filter = "Image Arranger Files|*.bmp;*.gif;*.jpeg;*.jpg;*.png;*.iaa"
+                        + "|Image files (*.bmp, *.gif, *.jpeg, *.jpg, *.png)|*.bmp;*.gif;*.jpeg;*.jpg;*.png"
+                        + "|Image Arranger Arrangements (*.iaa)|*.iaa";
+            Nullable<bool> result = ofd.ShowDialog();
+            if (result.HasValue && result.Value)
             {
-                timestamp.FileAbsolutePath = newFilePath;
-                timestamp.ParentDirAbsolutePath = newParentDirPath;
+                // Get the string paths for the selected file and its parent directory
+                string newFilePath = ofd.FileName;
+                string newParentDirPath = System.IO.Path.GetDirectoryName(newFilePath);
+
+                // Set properties of our cached list of timestamps to reflect the values we want to update in the database
+                foreach (FileTimestampModel timestamp in timestamps)
+                {
+                    timestamp.FileAbsolutePath = newFilePath;
+                    timestamp.ParentDirAbsolutePath = newParentDirPath;
+                }
+
+                // Update database
+                SqliteDataAccess.UpdateFileTimestamps(timestamps.ToList());
+
+                // Update FilePath property
+                this.FilePath = newFilePath;
+
+                // Notify listeners that the database has changed
+                OnDatabaseChanged();
             }
-
-            // Update database
-            SqliteDataAccess.UpdateFileTimestamps(timestamps.ToList());
-
-            // Update FilePath property
-            this.FilePath = newFilePath;
-
-            // Notify listeners that the database has changed
-            OnDatabaseChanged();
         }
 
         private void lbTimestamps_CmDeleteClick(object sender, RoutedEventArgs e)
