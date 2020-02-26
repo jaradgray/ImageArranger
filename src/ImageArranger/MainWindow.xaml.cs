@@ -187,11 +187,7 @@ namespace ImageArranger
             if (SelectImages())
             {
                 IndicateUnsavedChanges(true);
-                GenerateNormalizedLists();
-                ArrangeRects();
-                MainCanvas.Children.Clear();
-                //DrawRects();
-                DrawImages();
+                ArrangeImages();
             }
         }//end MainCanvas_PreviewMouseLeftButtonDown()
 
@@ -246,11 +242,7 @@ namespace ImageArranger
                 if (fileAdded)
                 {
                     IndicateUnsavedChanges(true);
-                    GenerateNormalizedLists();
-                    ArrangeRects();
-                    MainCanvas.Children.Clear();
-                    //DrawRects();
-                    DrawImages();
+                    ArrangeImages();
                 }
             }//end if
         }//end MainCanvas_PreviewDrop()
@@ -267,13 +259,8 @@ namespace ImageArranger
         {
             resizeTimer.IsEnabled = false;
             if (filenames.Count <= 0) return;
-            // rearrange rects/images based on new canvas size (bounds)
-            GenerateNormalizedLists();
-            ArrangeRects();
-            // redraw images/rects
-            MainCanvas.Children.Clear();
-            //DrawRects();
-            DrawImages();
+
+            ArrangeImages();
         }
 
         private void RemoveImage_Click(object sender, RoutedEventArgs e)
@@ -288,12 +275,7 @@ namespace ImageArranger
             // remove the Image's filename from filenames and redo arrangement
             filenames.Remove(((BitmapImage)target.Source).UriSource.OriginalString);
             IndicateUnsavedChanges(true);
-            GenerateNormalizedLists();
-            MainCanvas.Children.Clear();
-            if (filenames.Count == 0) return;
-            ArrangeRects();
-            //DrawRects();
-            DrawImages();
+            ArrangeImages();
         }
 
         private void RemoveAllImages_Click(object sender, RoutedEventArgs e)
@@ -314,11 +296,7 @@ namespace ImageArranger
             if (SelectImages())
             {
                 IndicateUnsavedChanges(true);
-                GenerateNormalizedLists();
-                ArrangeRects();
-                MainCanvas.Children.Clear();
-                //DrawRects();
-                DrawImages();
+                ArrangeImages();
             }
         }
 
@@ -345,10 +323,7 @@ namespace ImageArranger
             // Notify listeners that the database has changed
             OnDatabaseChanged();
 
-            GenerateNormalizedLists();
-            ArrangeRects();
-            MainCanvas.Children.Clear();
-            DrawImages();
+            ArrangeImages();
         }
 
         private void SaveArrangement()
@@ -420,6 +395,22 @@ namespace ImageArranger
                 }
             }
             return fileAdded;
+        }
+
+        /// <summary>
+        /// Creates Images from paths in the filenames list,
+        /// resizes and positions them according to the placement algorithm,
+        /// and displays them arranged on MainCanvas.
+        /// 
+        /// Post:   Images represented in filenames list are displayed within this Window's MainCanvas according
+        ///         to the placement algorithm.
+        /// </summary>
+        private void ArrangeImages()
+        {
+            GenerateNormalizedLists(); // Resize rects and images in our lists based on this Window's MainCanvas's size
+            ArrangeRects(); // Arrange rects via the highfalootin placement algorithm and DynamicGrid data structure
+            MainCanvas.Children.Clear(); // Clear MainCanvas
+            DrawImages(); // Add Images to MainCanvas based on arranged rects in rects list, scaling to fit MainCanvas's size
         }
 
         /// <summary>
