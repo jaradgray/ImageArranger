@@ -387,12 +387,21 @@ namespace ImageArranger
                 string[] files = ofd.FileNames;
                 foreach (string name in files)
                 {
+                    // Make a record in the database for the file
+                    DateTime now = DateTime.Now;
+                    FileTimestampModel timestamp = new FileTimestampModel(name, now.Ticks);
+                    SqliteDataAccess.SaveFileTimestamp(timestamp);
+
+                    // Add the file name to the filenames list if it doesn't already contain it
                     if (!filenames.Contains(name))
                     {
                         filenames.Add(name);
                         fileAdded = true;
                     }
                 }
+
+                // Notify listeners that the database has changed
+                OnDatabaseChanged();
             }
             return fileAdded;
         }
