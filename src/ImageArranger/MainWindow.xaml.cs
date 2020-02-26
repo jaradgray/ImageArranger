@@ -305,8 +305,9 @@ namespace ImageArranger
             _arrangementPath = filePath;
             this.Title = System.IO.Path.GetFileName(filePath) + " - " + APP_NAME;
             IndicateUnsavedChanges(false);
-            // Get data from File at filePath and add images to app's data
-            filenames = File.ReadAllLines(filePath).ToList();
+
+            // Get data from File at filePath
+            List<string> arrangementFilenames = File.ReadAllLines(filePath).ToList();
 
             // Make a database record for the arrangement file
             DateTime now = DateTime.Now;
@@ -314,7 +315,7 @@ namespace ImageArranger
             SqliteDataAccess.SaveFileTimestamp(timestamp);
 
             // Make a database record for each file in the arrangement 
-            foreach (string s in filenames)
+            foreach (string s in arrangementFilenames)
             {
                 timestamp = new FileTimestampModel(s, now.Ticks);
                 SqliteDataAccess.SaveFileTimestamp(timestamp);
@@ -323,7 +324,28 @@ namespace ImageArranger
             // Notify listeners that the database has changed
             OnDatabaseChanged();
 
+            // Re-initialize filenames list based on arrangement's files that exist (we'll show a MessageBox if any of the arrangement's files don't exist)
+            bool fileNotFound = false;
+            string fileNotFoundMsg = "Warning: The following file(s) were unable to be found. (They may have been renamed, moved, deleted, or stolen by data thieves):\n";
+            filenames = new List<string>();
+            foreach (string s in arrangementFilenames)
+            {
+                if (!File.Exists(s))
+                {
+                    fileNotFound = true;
+                    fileNotFoundMsg += "\n" + s;
+                    continue;
+                }
+                filenames.Add(s);
+            }
+
             ArrangeImages();
+
+            // Notify user if any of the arrangement's files don't exist
+            if (fileNotFound)
+            {
+                MessageBox.Show(this, fileNotFoundMsg, "File Not Found");
+            }
         }
 
         private void SaveArrangement()
