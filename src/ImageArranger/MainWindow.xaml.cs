@@ -205,14 +205,6 @@ namespace ImageArranger
                     string extension = System.IO.Path.GetExtension(fileName).ToUpperInvariant();
                     if (extension.Equals(FILE_EXTENSION_ARRANGEMENT.ToUpperInvariant()))
                     {
-                        // Add a FileTimestamp record to the database
-                        DateTime now = DateTime.Now;
-                        FileTimestampModel timestamp = new FileTimestampModel(fileName, now.Ticks);
-                        SqliteDataAccess.SaveFileTimestamp(timestamp);
-
-                        // Notify listeners that the database has changed
-                        OnDatabaseChanged();
-
                         // Open the Arrangement
                         OpenArrangement(fileName);
                         return;
@@ -312,11 +304,15 @@ namespace ImageArranger
             // Get data from File at filePath and add images to app's data
             filenames = File.ReadAllLines(filePath).ToList();
 
+            // Make a database record for the arrangement file
+            DateTime now = DateTime.Now;
+            FileTimestampModel timestamp = new FileTimestampModel(filePath, now.Ticks);
+            SqliteDataAccess.SaveFileTimestamp(timestamp);
+
             // Make a database record for each file in the arrangement 
             foreach (string s in filenames)
             {
-                DateTime now = DateTime.Now;
-                FileTimestampModel timestamp = new FileTimestampModel(s, now.Ticks);
+                timestamp = new FileTimestampModel(s, now.Ticks);
                 SqliteDataAccess.SaveFileTimestamp(timestamp);
             }
 
