@@ -46,11 +46,7 @@ namespace ImageArranger
             Week,
             Month,
             Year,
-            AllTime, 
-            // TODO delete the following, just for debugging
-            ThirtySeconds,
-            Minute,
-            ThreeMinutes
+            AllTime
         }
 
         // Instance variables
@@ -226,17 +222,6 @@ namespace ImageArranger
                 // all time
                 case 5:
                     mTimeFrame = TimeFrame.AllTime;
-                    break;
-
-                // TODO delete the following
-                case 6:
-                    mTimeFrame = TimeFrame.ThirtySeconds;
-                    break;
-                case 7:
-                    mTimeFrame = TimeFrame.Minute;
-                    break;
-                case 8:
-                    mTimeFrame = TimeFrame.ThreeMinutes;
                     break;
             }
 

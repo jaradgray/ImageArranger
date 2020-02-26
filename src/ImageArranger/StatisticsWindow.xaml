@@ -67,9 +67,6 @@
                     <ComboBoxItem>Month</ComboBoxItem>
                     <ComboBoxItem>Year</ComboBoxItem>
                     <ComboBoxItem>All Time</ComboBoxItem>
-                    <ComboBoxItem>30 Seconds</ComboBoxItem>
-                    <ComboBoxItem>Minute</ComboBoxItem>
-                    <ComboBoxItem>3 Minutes</ComboBoxItem>
                 </ComboBox>
 
             </StackPanel>
