@@ -1,0 +1,180 @@
+﻿ <Window x:Class="ImageArranger.StatisticsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ImageArranger"
+        mc:Ignorable="d"
+        Title="Statistics" Height="600" Width="1200">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Reveal Database File in Explorer..."
+                    Click="MiRevealDatabaseInExplorer_Click"/>
+            </MenuItem>
+        </Menu>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="16" />
+                <!-- folder statistics column -->
+                <ColumnDefinition Width="300"
+                MinWidth="100"/>
+                <!-- GridSplitter column -->
+                <ColumnDefinition Width="auto" />
+                <!-- file statistics column -->
+                <ColumnDefinition Width="*"
+                MinWidth="100" />
+                <!-- GridSplitter column -->
+                <ColumnDefinition Width="auto" />
+                <!-- preview column -->
+                <ColumnDefinition Width="300"
+                MinWidth="200" />
+                <ColumnDefinition Width="16" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="16" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="16" />
+            </Grid.RowDefinitions>
+
+            <!-- Sorting and filters -->
+            <StackPanel
+            Grid.Row="1"
+            Grid.Column="1"
+            Grid.ColumnSpan="5"
+            Margin="0, 0, 0, 8"
+            Orientation="Horizontal">
+
+                <TextBlock Text="Order by:"
+                Margin="0, 0, 8, 0" />
+                <ComboBox x:Name="cmbSortMode"
+                Margin="0, 0, 16, 0"
+                SelectedIndex="0"
+                SelectionChanged="CmbSortMode_SelectionChanged">
+                    <ComboBoxItem>Most Views</ComboBoxItem>
+                    <ComboBoxItem>Most Recently Viewed</ComboBoxItem>
+                </ComboBox>
+                <TextBlock Text="Range:"
+                Margin="0, 0, 8, 0" />
+                <ComboBox x:Name="cmbTimeFrame"
+                SelectedIndex="5"
+                SelectionChanged="CmbTimeFrame_SelectionChanged">
+                    <ComboBoxItem>24 Hours</ComboBoxItem>
+                    <ComboBoxItem>3 Days</ComboBoxItem>
+                    <ComboBoxItem>Week</ComboBoxItem>
+                    <ComboBoxItem>Month</ComboBoxItem>
+                    <ComboBoxItem>Year</ComboBoxItem>
+                    <ComboBoxItem>All Time</ComboBoxItem>
+                </ComboBox>
+
+            </StackPanel>
+
+            <!-- Folders area -->
+            <DockPanel
+            Grid.Row="2"
+            Grid.Column="1">
+
+                <ListView x:Name="foldersListView"
+                SelectionChanged="FoldersListView_SelectionChanged">
+
+                    <ListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Clear Selection"
+                            Click="foldersListViewCM_ClearSelection_Click" />
+                            <MenuItem Header="Delete Data"
+                            Click="foldersListViewCM_DeleteData_Click" />
+                            <MenuItem Header="Reveal in Explorer..."
+                            Click="foldersListViewCM_RevealInExplorer_Click" />
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+
+                    <ListView.View>
+                        <GridView>
+
+                            <GridViewColumn Header="Views"
+                            Width="50"
+                            DisplayMemberBinding="{Binding NumViews}" />
+
+                            <GridViewColumn Header="Name"
+                            Width="200"
+                            DisplayMemberBinding="{Binding Name}" />
+
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+            </DockPanel>
+
+            <GridSplitter
+            Grid.Row="2"
+            Grid.Column="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch"
+            Background="Gray"
+            Width="5"/>
+
+            <!-- Files area -->
+            <DockPanel
+            Grid.Row="2"
+            Grid.Column="3">
+
+                <ListView x:Name="filesListView"
+                SelectionMode="Single"
+                SelectionChanged="FilesListView_SelectionChanged">
+
+                    <ListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Edit Data..."
+                            Click="filesListViewCM_EditData_Click" />
+                            <MenuItem Header="Delete Data"
+                            Click="filesListViewCM_DeleteData_Click" />
+                            <MenuItem Header="Reveal in Explorer..."
+                            Click="filesListViewCM_RevealInExplorer_Click" />
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+
+                    <ListView.View>
+                        <GridView>
+
+                            <GridViewColumn Header="Views"
+                            Width="50"
+                            DisplayMemberBinding="{Binding NumViews}" />
+
+                            <GridViewColumn Header="Name"
+                            Width="150"
+                            DisplayMemberBinding="{Binding Name}" />
+
+                            <GridViewColumn Header="Last Opened"
+                            Width="150"
+                            DisplayMemberBinding="{Binding TimestampLastOpened}" />
+
+                            <GridViewColumn Header="Directory"
+                            Width="100"
+                            DisplayMemberBinding="{Binding ParentDirName}" />
+
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+            </DockPanel>
+
+            <GridSplitter
+            Grid.Row="2"
+            Grid.Column="4"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch"
+            Background="Gray"
+            Width="5" />
+
+            <!-- Preview area -->
+            <Image x:Name="previewImage"
+            Grid.Row="2"
+            Grid.Column="5"
+            Margin="16"
+            Stretch="Uniform"/>
+
+        </Grid>
+    </DockPanel>
+</Window>

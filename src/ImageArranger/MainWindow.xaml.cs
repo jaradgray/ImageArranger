@@ -40,6 +40,15 @@ namespace ImageArranger
         private string _arrangementPath = "";
         private bool _hasUnsavedChanges = false;
 
+        /// <summary>
+        /// The event that notifies subscribers that the database has changed.
+        /// </summary>
+        public event EventHandler DatabaseChanged;
+        private void OnDatabaseChanged()
+        {
+            if (DatabaseChanged != null) DatabaseChanged(this, EventArgs.Empty);
+        }
+
 
         // Constructor
         public MainWindow()
@@ -145,6 +154,19 @@ namespace ImageArranger
             }
         }
 
+        private void StatisticsCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void StatisticsCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            // Show Statistics window
+            StatisticsWindow statisticsWindow = new StatisticsWindow();
+            statisticsWindow.Owner = this;
+            statisticsWindow.Show();
+        }
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -165,11 +187,7 @@ namespace ImageArranger
             if (SelectImages())
             {
                 IndicateUnsavedChanges(true);
-                GenerateNormalizedLists();
-                ArrangeRects();
-                MainCanvas.Children.Clear();
-                //DrawRects();
-                DrawImages();
+                ArrangeImages();
             }
         }//end MainCanvas_PreviewMouseLeftButtonDown()
 
@@ -193,10 +211,17 @@ namespace ImageArranger
                     }
                 }
                 // Handle non-Arrangement file dropped
+                bool databaseUpdated = false;
                 foreach (string s in droppedFilenames)
                 {
                     if (validImageExtensions.Contains(System.IO.Path.GetExtension(s).ToUpperInvariant()))
                     {
+                        // Add a FileTimestamp record to the database
+                        DateTime now = DateTime.Now;
+                        FileTimestampModel timestamp = new FileTimestampModel(s, now.Ticks);
+                        SqliteDataAccess.SaveFileTimestamp(timestamp);
+                        databaseUpdated = true;
+
                         // add s to filenames if it's not already there
                         if (!filenames.Contains(s))
                         {
@@ -205,14 +230,15 @@ namespace ImageArranger
                         }
                     }
                 }//end foreach
+                if (databaseUpdated)
+                {
+                    // Notify listeners that the database has changed
+                    OnDatabaseChanged();
+                }
                 if (fileAdded)
                 {
                     IndicateUnsavedChanges(true);
-                    GenerateNormalizedLists();
-                    ArrangeRects();
-                    MainCanvas.Children.Clear();
-                    //DrawRects();
-                    DrawImages();
+                    ArrangeImages();
                 }
             }//end if
         }//end MainCanvas_PreviewDrop()
@@ -229,13 +255,8 @@ namespace ImageArranger
         {
             resizeTimer.IsEnabled = false;
             if (filenames.Count <= 0) return;
-            // rearrange rects/images based on new canvas size (bounds)
-            GenerateNormalizedLists();
-            ArrangeRects();
-            // redraw images/rects
-            MainCanvas.Children.Clear();
-            //DrawRects();
-            DrawImages();
+
+            ArrangeImages();
         }
 
         private void RemoveImage_Click(object sender, RoutedEventArgs e)
@@ -250,12 +271,7 @@ namespace ImageArranger
             // remove the Image's filename from filenames and redo arrangement
             filenames.Remove(((BitmapImage)target.Source).UriSource.OriginalString);
             IndicateUnsavedChanges(true);
-            GenerateNormalizedLists();
-            MainCanvas.Children.Clear();
-            if (filenames.Count == 0) return;
-            ArrangeRects();
-            //DrawRects();
-            DrawImages();
+            ArrangeImages();
         }
 
         private void RemoveAllImages_Click(object sender, RoutedEventArgs e)
@@ -276,11 +292,7 @@ namespace ImageArranger
             if (SelectImages())
             {
                 IndicateUnsavedChanges(true);
-                GenerateNormalizedLists();
-                ArrangeRects();
-                MainCanvas.Children.Clear();
-                //DrawRects();
-                DrawImages();
+                ArrangeImages();
             }
         }
 
@@ -293,12 +305,47 @@ namespace ImageArranger
             _arrangementPath = filePath;
             this.Title = System.IO.Path.GetFileName(filePath) + " - " + APP_NAME;
             IndicateUnsavedChanges(false);
-            // Get data from File at filePath and add images to app's data
-            filenames = File.ReadAllLines(filePath).ToList();
-            GenerateNormalizedLists();
-            ArrangeRects();
-            MainCanvas.Children.Clear();
-            DrawImages();
+
+            // Get data from File at filePath
+            List<string> arrangementFilenames = File.ReadAllLines(filePath).ToList();
+
+            // Make a database record for the arrangement file
+            DateTime now = DateTime.Now;
+            FileTimestampModel timestamp = new FileTimestampModel(filePath, now.Ticks);
+            SqliteDataAccess.SaveFileTimestamp(timestamp);
+
+            // Make a database record for each file in the arrangement 
+            foreach (string s in arrangementFilenames)
+            {
+                timestamp = new FileTimestampModel(s, now.Ticks);
+                SqliteDataAccess.SaveFileTimestamp(timestamp);
+            }
+
+            // Notify listeners that the database has changed
+            OnDatabaseChanged();
+
+            // Re-initialize filenames list based on arrangement's files that exist (we'll show a MessageBox if any of the arrangement's files don't exist)
+            bool fileNotFound = false;
+            string fileNotFoundMsg = "Warning: The following file(s) were unable to be found. (They may have been renamed, moved, deleted, or stolen by data thieves):\n";
+            filenames = new List<string>();
+            foreach (string s in arrangementFilenames)
+            {
+                if (!File.Exists(s))
+                {
+                    fileNotFound = true;
+                    fileNotFoundMsg += "\n" + s;
+                    continue;
+                }
+                filenames.Add(s);
+            }
+
+            ArrangeImages();
+
+            // Notify user if any of the arrangement's files don't exist
+            if (fileNotFound)
+            {
+                MessageBox.Show(this, fileNotFoundMsg, "File Not Found");
+            }
         }
 
         private void SaveArrangement()
@@ -362,14 +409,39 @@ namespace ImageArranger
                 string[] files = ofd.FileNames;
                 foreach (string name in files)
                 {
+                    // Make a record in the database for the file
+                    DateTime now = DateTime.Now;
+                    FileTimestampModel timestamp = new FileTimestampModel(name, now.Ticks);
+                    SqliteDataAccess.SaveFileTimestamp(timestamp);
+
+                    // Add the file name to the filenames list if it doesn't already contain it
                     if (!filenames.Contains(name))
                     {
                         filenames.Add(name);
                         fileAdded = true;
                     }
                 }
+
+                // Notify listeners that the database has changed
+                OnDatabaseChanged();
             }
             return fileAdded;
+        }
+
+        /// <summary>
+        /// Creates Images from paths in the filenames list,
+        /// resizes and positions them according to the placement algorithm,
+        /// and displays them arranged on MainCanvas.
+        /// 
+        /// Post:   Images represented in filenames list are displayed within this Window's MainCanvas according
+        ///         to the placement algorithm.
+        /// </summary>
+        private void ArrangeImages()
+        {
+            GenerateNormalizedLists(); // Resize rects and images in our lists based on this Window's MainCanvas's size
+            ArrangeRects(); // Arrange rects via the highfalootin placement algorithm and DynamicGrid data structure
+            MainCanvas.Children.Clear(); // Clear MainCanvas
+            DrawImages(); // Add Images to MainCanvas based on arranged rects in rects list, scaling to fit MainCanvas's size
         }
 
         /// <summary>
