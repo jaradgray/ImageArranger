@@ -24,7 +24,7 @@ namespace ImageArranger
             SaveCommand.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Control, "Ctrl+S"));
             SaveAsCommand.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Control|ModifierKeys.Shift, "Ctrl+Shift+S"));
             QuitCommand.InputGestures.Add(new KeyGesture(Key.Q, ModifierKeys.Control, "Ctrl+Q"));
-            FullScreenCommand.InputGestures.Add(new KeyGesture(Key.F, ModifierKeys.Control, "Ctrl+F"));
+            FullScreenCommand.InputGestures.Add(new KeyGesture(Key.F4, ModifierKeys.None, "F4"));
             StatisticsCommand.InputGestures.Add(new KeyGesture(Key.F3, ModifierKeys.None, "F3"));
         }
     }
